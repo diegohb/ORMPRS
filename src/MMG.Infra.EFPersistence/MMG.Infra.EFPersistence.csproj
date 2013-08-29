@@ -43,7 +43,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EFContextConfiguration.cs" />
+    <Compile Include="EFContextManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MMG.Core.Persistence\MMG.Core.Persistence.csproj">
+      <Project>{e015148c-1a1b-492f-a024-2c1f574ad202}</Project>
+      <Name>MMG.Core.Persistence</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
