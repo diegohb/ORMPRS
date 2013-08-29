@@ -6,15 +6,16 @@
 
 using System;
 using System.Linq.Expressions;
+using MMG.Core.Query.Extensions;
 
 namespace MMG.Core.Query
 {
     public class NotSpecification<TEntity> : Specification<TEntity>
     {
         public NotSpecification(Expression<Func<TEntity, bool>> pPredicate)
-            : base((Expression<Func<TEntity, bool>>) pPredicate.Not()) {}
+            : base(pPredicate.Not()) { }
 
         public NotSpecification(Specification<TEntity> pPredicate)
-            : base((Expression<Func<TEntity, bool>>) pPredicate.Predicate.Not()) {}
+            : base(pPredicate.Predicate.Not()) {}
     }
 }
