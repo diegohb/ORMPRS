@@ -20,7 +20,7 @@ namespace MMG.Core.Persistence
         void AddContextBuilder(IDbContextConfiguration pDbContextConfig);
 
         /// <summary>
-        /// Will add/replace configuration for context builder with specified key.
+        /// Will add configuration for context builder with specified key.
         /// </summary>
         /// <param name="pConnectionStringName">The key to use to store the context builder.</param>
         /// <param name="pDbContextConfig">The orm-specific configuration object to pass to the context builder.</param>
