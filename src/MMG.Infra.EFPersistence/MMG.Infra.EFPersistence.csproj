@@ -50,12 +50,18 @@
     <Compile Include="EFContextConfiguration.cs" />
     <Compile Include="EFContextManager.cs" />
     <Compile Include="EFDbContext.cs" />
+    <Compile Include="EFGenericRepository.cs" />
+    <Compile Include="EFUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MMG.Core.Persistence\MMG.Core.Persistence.csproj">
       <Project>{e015148c-1a1b-492f-a024-2c1f574ad202}</Project>
       <Name>MMG.Core.Persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MMG.Core.Query\MMG.Core.Query.csproj">
+      <Project>{43e019d8-b53d-4797-8ea1-4925f211b9ca}</Project>
+      <Name>MMG.Core.Query</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
