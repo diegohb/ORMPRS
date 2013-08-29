@@ -40,5 +40,14 @@ namespace MMG.Core.Query.Extensions
         {
             return first.Compose(second, Expression.Or);
         }
+
+        public static Expression<Func<T, bool>> Not<T>(this Expression<Func<T, bool>> first)
+        {
+            //source: http://stackoverflow.com/a/4417558/1240322
+            var candidateExpr = first.Parameters[0];
+            var body = Expression.Not(first.Body);
+
+            return Expression.Lambda<Func<T, bool>>(body, candidateExpr);
+        }
     }
 }

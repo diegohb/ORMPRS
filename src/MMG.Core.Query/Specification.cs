@@ -15,9 +15,9 @@ namespace MMG.Core.Query
     {
         protected Specification() {}
 
-        public Specification(Expression<Func<TEntity, bool>> predicate)
+        public Specification(Expression<Func<TEntity, bool>> pPredicate)
         {
-            Predicate = predicate;
+            Predicate = pPredicate;
         }
 
         public Specification(CompositeSpecification<TEntity> pCompositeSpecification)
@@ -27,9 +27,9 @@ namespace MMG.Core.Query
 
         public Expression<Func<TEntity, bool>> Predicate { get; protected set; }
 
-        public Specification<TEntity> And(Specification<TEntity> specification)
+        public Specification<TEntity> And(Specification<TEntity> pSpecification)
         {
-            return new Specification<TEntity>(Predicate.And(specification.Predicate));
+            return new Specification<TEntity>(Predicate.And(pSpecification.Predicate));
         }
 
         public Specification<TEntity> And(Expression<Func<TEntity, bool>> pPredicate)
@@ -45,6 +45,11 @@ namespace MMG.Core.Query
         public Specification<TEntity> Or(Expression<Func<TEntity, bool>> pPredicate)
         {
             return new Specification<TEntity>(Predicate.Or(pPredicate));
+        }
+
+        public bool IsSatisfiedBy(TEntity pObject)
+        {
+            return Predicate.Compile().Invoke(pObject);
         }
 
         public TEntity SatisfyingEntityFrom(IQueryable<TEntity> pQuery)

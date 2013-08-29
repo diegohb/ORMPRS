@@ -13,6 +13,6 @@ namespace MMG.Core.Persistence
     /// </summary>
     public interface IDbContextConfiguration
     {
-        IEnumerable<string> MappingAssemblies { get; set; }
+        IList<string> MappingAssemblies { get; set; }
     }
 }

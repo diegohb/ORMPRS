@@ -159,7 +159,7 @@ namespace MMG.Infra.EFPersistence
 
                 _dbContextBuilders.Add
                     (pConnectionStringName,
-                     new DbContextBuilder<IDbContext>(pConnectionStringName, pDbContextConfig));
+                     new EFContextBuilder<EFDbContext>(pConnectionStringName, (EFContextConfiguration) pDbContextConfig));
             }
         }
     }
