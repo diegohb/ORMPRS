@@ -43,6 +43,7 @@
     <Compile Include="Extensions\ExpressionExtensions.cs" />
     <Compile Include="Extensions\QueryableTExtensions.cs" />
     <Compile Include="ISpecification.cs" />
+    <Compile Include="NotSpecification.cs" />
     <Compile Include="OrSpecification.cs" />
     <Compile Include="ParameterRebinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
