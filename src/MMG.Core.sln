@@ -23,6 +23,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMG.Core.Persistence", "MMG
 		SccProvider = Plastic SCM
 	EndGlobalSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMG.Infra.EFPersistence", "MMG.Infra.EFPersistence\MMG.Infra.EFPersistence.csproj", "{E8B8E922-308E-4FCE-9BAA-BBED6850E69D}"
+	GlobalSection(PlasticSccProperties) = preSolution
+		ControlledByPlastic = True
+		SccProvider = Plastic SCM
+	EndGlobalSection
+EndProject
 Global
 	GlobalSection(PlasticSccProperties) = preSolution
 		ControlledByPlastic = True
@@ -41,6 +47,10 @@ Global
 		{E015148C-1A1B-492F-A024-2C1F574AD202}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E015148C-1A1B-492F-A024-2C1F574AD202}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E015148C-1A1B-492F-A024-2C1F574AD202}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8B8E922-308E-4FCE-9BAA-BBED6850E69D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8B8E922-308E-4FCE-9BAA-BBED6850E69D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8B8E922-308E-4FCE-9BAA-BBED6850E69D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8B8E922-308E-4FCE-9BAA-BBED6850E69D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
