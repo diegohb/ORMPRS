@@ -1,47 +1,65 @@
 ﻿// *************************************************
-// MMG.Core.Persistence.DbContextManager.cs
-// Last Modified: 08/29/2013 12:13 PM
+// MMG.Infra.EFPersistence.EFContextManager.cs
+// Last Modified: 08/29/2013 2:33 PM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
 using System;
 using System.Collections.Generic;
+using MMG.Core.Persistence;
 
-namespace MMG.Core.Persistence
+namespace MMG.Infra.EFPersistence
 {
-    public class DbContextManager
+    public class EFContextManager : IDbContextManager
     {
+        private static readonly Lazy<EFContextManager> _instance = new Lazy<EFContextManager>(() => new EFContextManager());
+
+        /// <summary>
+        /// Lock for accessing dictionary of context builders.
+        /// </summary>
+        private readonly object _syncLock = new object();
+
         /// <summary>
         /// Maintains a dictionary of db context builders, one per database.  The key is a 
         /// connection string name used to look up the associated database, and used to decorate respective
         /// repositories. If only one database is being used, this dictionary contains a single
         /// factory with a key of <see cref="DefaultConnectionStringName" />.
         /// </summary>
-        protected static readonly Dictionary<string, IDbContextBuilder<IDbContext>> _dbContextBuilders =
+        private readonly Dictionary<string, IDbContextBuilder<IDbContext>> _dbContextBuilders =
             new Dictionary<string, IDbContextBuilder<IDbContext>>();
-
-        protected static readonly object _syncLock = new object();
-
+        
         /// <summary>
         /// An application-specific implementation of IDbContextStorage must be setup either thru
-        /// <see cref="InitStorage" /> or one of the <see cref="Init(string[],bool)" /> overloads. 
+        /// <see cref="InitStorage" /> or one of the <see cref="AddContextBuilder(MMG.Core.Persistence.IDbContextConfiguration)" /> overloads. 
         /// </summary>
-        protected static IDbContextStorage Storage
+        private IDbContextStorage _storage;
+
+        private EFContextManager() {}
+        
+        /// <summary>
+        /// The default connection string name used if only one database is being communicated with.
+        /// </summary>
+        public string DefaultConnectionStringName
         {
-            get { return _storage; }
+            get { return "EFDefaultDb"; }
         }
 
-        public static void Init(string[] pMappingAssemblies, bool pUpdateDatabaseSchema = false)
+        public static EFContextManager Instance
         {
-            Init(DefaultConnectionStringName, pMappingAssemblies, pUpdateDatabaseSchema);
+            get { return _instance.Value; }
         }
 
-        public static void Init(string pConnectionStringName, string[] pMappingAssemblies, bool pUpdateDatabaseSchema = false)
+        public void AddContextBuilder(IDbContextConfiguration pDbContextConfig)
         {
-            addConfiguration(pConnectionStringName, pMappingAssemblies, pUpdateDatabaseSchema);
+            AddContextBuilder(DefaultConnectionStringName, pDbContextConfig);
         }
 
-        public static void InitStorage(IDbContextStorage pStorage)
+        public void AddContextBuilder(string pConnectionStringName, IDbContextConfiguration pDbContextConfig)
+        {
+            addConfiguration(pConnectionStringName, pDbContextConfig);
+        }
+
+        public void InitStorage(IDbContextStorage pStorage)
         {
             if (pStorage == null)
             {
@@ -54,20 +72,23 @@ namespace MMG.Core.Persistence
             _storage = pStorage;
         }
 
-        /// <summary>
-        /// The default connection string name used if only one database is being communicated with.
-        /// </summary>
-        public static readonly string DefaultConnectionStringName = "DefaultDb";
-
-        private static IDbContextStorage _storage;
 
         /// <summary>
         /// Used to get the current db context session if you're communicating with a single database.
         /// When communicating with multiple databases, invoke <see cref="CurrentFor(string)" /> instead.
         /// </summary>
-        public static IDbContext Current
+        public IDbContext Current
         {
             get { return CurrentFor(DefaultConnectionStringName); }
+        }
+
+        /// <summary>
+        /// An application-specific implementation of IDbContextStorage must be setup either thru
+        /// <see cref="InitStorage" /> or one of the <see cref="AddContextBuilder(MMG.Core.Persistence.IDbContextConfiguration)" /> overloads. 
+        /// </summary>
+        public IDbContextStorage Storage
+        {
+            get { return _storage; }
         }
 
         /// <summary>
@@ -77,7 +98,7 @@ namespace MMG.Core.Persistence
         /// If you're only communicating with one database, you should call <see cref="Current" /> instead,
         /// although you're certainly welcome to call this if you have the key available.
         /// </summary>
-        public static IDbContext CurrentFor(string pKey)
+        public IDbContext CurrentFor(string pKey)
         {
             if (string.IsNullOrEmpty(pKey))
             {
@@ -112,7 +133,7 @@ namespace MMG.Core.Persistence
         /// This method is used by application-specific db context storage implementations
         /// and unit tests. Its job is to walk thru existing cached object context(s) and Close() each one.
         /// </summary>
-        public static void CloseAllDbContexts()
+        public void CloseAllDbContexts()
         {
             foreach (IDbContext ctx in Storage.GetAllDbContexts())
             {
@@ -120,18 +141,25 @@ namespace MMG.Core.Persistence
             }
         }
 
-        private static void addConfiguration(string pConnectionStringName, IEnumerable<string> pMappingAssemblies, bool pUpdateDatabaseSchema = false)
+        private void addConfiguration(string pConnectionStringName, IDbContextConfiguration pDbContextConfig)
         {
             if (string.IsNullOrEmpty(pConnectionStringName))
                 throw new ArgumentNullException("pConnectionStringName");
 
-            if (pMappingAssemblies == null)
-                throw new ArgumentNullException("pMappingAssemblies");
+            if (pDbContextConfig == null)
+                throw new ArgumentNullException("pDbContextConfig");
 
             lock (_syncLock)
             {
-                /*_dbContextBuilders.Add(pConnectionStringName,
-                    new DbContextBuilder<IDbContext>(pConnectionStringName, pMappingAssemblies, pUpdateDatabaseSchema));*/
+                if (_dbContextBuilders.ContainsKey(pConnectionStringName))
+                    throw new Exception
+                        (string.Format
+                             ("A builder configuration has already been specified for key '{0}'. You can only call this method once per connection string name.",
+                              pConnectionStringName));
+
+                _dbContextBuilders.Add
+                    (pConnectionStringName,
+                     new DbContextBuilder<IDbContext>(pConnectionStringName, pDbContextConfig));
             }
         }
     }
