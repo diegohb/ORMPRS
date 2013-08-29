@@ -47,6 +47,11 @@ namespace MMG.Core.Query
             return new Specification<TEntity>(Predicate.Or(pPredicate));
         }
 
+        public bool IsSatisfiedBy(TEntity pObject)
+        {
+            return Predicate.Compile().Invoke(pObject);
+        }
+
         public TEntity SatisfyingEntityFrom(IQueryable<TEntity> pQuery)
         {
             return pQuery.Where(Predicate).SingleOrDefault();

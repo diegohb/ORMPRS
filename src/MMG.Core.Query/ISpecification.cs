@@ -4,7 +4,9 @@
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
+using System;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace MMG.Core.Query
 {
@@ -17,6 +19,10 @@ namespace MMG.Core.Query
     /// <typeparam name="TEntity"></typeparam>
     public interface ISpecification<TEntity>
     {
+        Expression<Func<TEntity, bool>> Predicate { get; }
+
+        bool IsSatisfiedBy(TEntity pObject);
+
         TEntity SatisfyingEntityFrom(IQueryable<TEntity> pQuery);
 
         IQueryable<TEntity> SatisfyingEntitiesFrom(IQueryable<TEntity> pQuery);

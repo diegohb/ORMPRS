@@ -27,6 +27,11 @@ namespace MMG.Core.Query
 
         public abstract Expression<Func<TEntity, bool>> Predicate { get; }
 
+        public bool IsSatisfiedBy(TEntity pObject)
+        {
+            return Predicate.Compile().Invoke(pObject);
+        }
+
         public virtual TEntity SatisfyingEntityFrom(IQueryable<TEntity> pQuery)
         {
             //TODO: test single instead of firstordefault()
