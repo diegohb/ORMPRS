@@ -142,6 +142,16 @@ namespace MMG.Infra.EFPersistence
             return criteria.SatisfyingEntityFrom(GetQuery<TEntity>());
         }
 
+        public TEntity SingleOrDefault<TEntity>(Expression<Func<TEntity, bool>> criteria) where TEntity : class
+        {
+            return GetQuery<TEntity>().SingleOrDefault<TEntity>(criteria);
+        }
+
+        public TEntity SingleOrDefault<TEntity>(ISpecification<TEntity> pSpecification) where TEntity : class
+        {
+            return pSpecification.SatisfyingEntityFrom(GetQuery<TEntity>());
+        }
+
         public TEntity First<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class
         {
             return GetQuery<TEntity>().First(predicate);
