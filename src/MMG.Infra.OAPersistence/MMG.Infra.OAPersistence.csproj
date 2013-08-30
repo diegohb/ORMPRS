@@ -39,6 +39,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="Telerik.OpenAccess">
       <HintPath>..\..\..\packages\OpenAccess.CodeFirst.2013.2.702.1\lib\Telerik.OpenAccess.dll</HintPath>
     </Reference>
@@ -53,6 +54,8 @@
     <Compile Include="DynamicMetadataSource.cs" />
     <Compile Include="OAContextBuilder.cs" />
     <Compile Include="OAContextConfiguration.cs" />
+    <Compile Include="OAContextManager.cs" />
+    <Compile Include="OADbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
