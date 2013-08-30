@@ -16,8 +16,16 @@ namespace MMG.Infra.EFPersistence
     /// </summary>
     public abstract class EFDbContext : DbContext, IDbContext
     {
+        #region Constructors
+
+        protected EFDbContext(string pNameOrConnectionString)
+            : base(pNameOrConnectionString) {}
+
         public EFDbContext(ObjectContext pObjectContext, bool pDBContextOwnsObjectContext)
             : base(pObjectContext, pDBContextOwnsObjectContext) {}
+
+        #endregion
+
 
         public void Add<TEntity>(TEntity pEntity) where TEntity : class, IDbEntity
         {
