@@ -211,7 +211,7 @@ namespace MMG.Infra.EFPersistence
             return entity;
         }
 
-        public void Update<TEntity>(TEntity entity) where TEntity : class
+        public TEntity Update<TEntity>(TEntity entity) where TEntity : class
         {
             var fqen = GetEntityName<TEntity>();
 
@@ -221,6 +221,7 @@ namespace MMG.Infra.EFPersistence
             {
                 ((IObjectContextAdapter)DbContext).ObjectContext.ApplyCurrentValues(key.EntitySetName, entity);
             }
+            return entity;
         }
 
         public IEnumerable<TEntity> Find<TEntity>(Expression<Func<TEntity, bool>> criteria) where TEntity : class
