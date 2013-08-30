@@ -64,7 +64,7 @@ namespace MMG.Infra.EFPersistence
 
         public TEntity GetByKey<TEntity>(object keyValue) where TEntity : class
         {
-            EntityKey key = GetEntityKey<TEntity>(keyValue);
+            EntityKey key = getEntityKey<TEntity>(keyValue);
 
             object originalItem;
             if (((IObjectContextAdapter)DbContext).ObjectContext.TryGetObjectByKey(key, out originalItem))
@@ -91,7 +91,7 @@ namespace MMG.Infra.EFPersistence
             // - cast DbContext to IObjectContextAdapter then get ObjectContext from it
             // - call CreateQuery<TEntity>(entityName) method on the ObjectContext
             // - perform querying on the returning IQueryable, and it works!
-            var entityName = GetEntityName<TEntity>();
+            var entityName = getEntityName<TEntity>();
             return ((IObjectContextAdapter)DbContext).ObjectContext.CreateQuery<TEntity>(entityName);
         }
 
@@ -213,7 +213,7 @@ namespace MMG.Infra.EFPersistence
 
         public TEntity Update<TEntity>(TEntity entity) where TEntity : class
         {
-            var fqen = GetEntityName<TEntity>();
+            var fqen = getEntityName<TEntity>();
 
             object originalItem;
             EntityKey key = ((IObjectContextAdapter)DbContext).ObjectContext.CreateEntityKey(fqen, entity);
@@ -264,16 +264,16 @@ namespace MMG.Infra.EFPersistence
             get { return _unitOfWork ?? (_unitOfWork = new EFUnitOfWork(DbContext)); }
         }
 
-        private EntityKey GetEntityKey<TEntity>(object keyValue) where TEntity : class
+        private EntityKey getEntityKey<TEntity>(object keyValue) where TEntity : class
         {
-            var entitySetName = GetEntityName<TEntity>();
+            var entitySetName = getEntityName<TEntity>();
             var objectSet = ((IObjectContextAdapter)DbContext).ObjectContext.CreateObjectSet<TEntity>();
             var keyPropertyName = objectSet.EntitySet.ElementType.KeyMembers[0].ToString();
             var entityKey = new EntityKey(entitySetName, new[] { new EntityKeyMember(keyPropertyName, keyValue) });
             return entityKey;
         }
 
-        private string GetEntityName<TEntity>() where TEntity : class
+        private string getEntityName<TEntity>() where TEntity : class
         {
             // PluralizationService pluralizer = PluralizationService.CreateService(CultureInfo.GetCultureInfo("en"));
             // return string.Format("{0}.{1}", ((IObjectContextAdapter)DbContext).ObjectContext.DefaultContainerName, pluralizer.Pluralize(typeof(TEntity).Name));
