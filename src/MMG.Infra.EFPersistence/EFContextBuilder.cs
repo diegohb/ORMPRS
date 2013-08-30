@@ -13,6 +13,7 @@ using System.Data.Entity.ModelConfiguration;
 using System.Data.Objects;
 using System.Reflection;
 using MMG.Core.Persistence;
+using System.Linq;
 
 namespace MMG.Infra.EFPersistence
 {
@@ -77,48 +78,47 @@ namespace MMG.Infra.EFPersistence
             {
                 var asm = Assembly.LoadFrom(makeLoadReadyAssemblyName(mappingAssembly));
 
-                foreach (Type type in asm.GetTypes())
+                foreach (var type in asm.GetTypes())
                 {
-                    if (!type.IsAbstract)
-                    {
-                        if (type.BaseType.IsGenericType && IsMappingClass(type.BaseType))
-                        {
-                            hasMappingClass = true;
+                    if (type.IsAbstract) continue;
 
-                            // http://areaofinterest.wordpress.com/2010/12/08/dynamically-load-entity-configurations-in-ef-codefirst-ctp5/
-                            dynamic configurationInstance = Activator.CreateInstance(type);
-                            Configurations.Add(configurationInstance);
-                        }
-                    }
+                    if (type.BaseType == null ||
+                        !type.GetInterfaces().Contains(typeof (IMapEntityToDb))
+                        || (!isMappingClass(type.BaseType))) continue;
+                    
+                    hasMappingClass = true;
+                    // http://areaofinterest.wordpress.com/2010/12/08/dynamically-load-entity-configurations-in-ef-codefirst-ctp5/
+                    dynamic configurationInstance = Activator.CreateInstance(type);
+                    Configurations.Add(configurationInstance);
                 }
             }
 
             if (!hasMappingClass)
-            {
                 throw new ArgumentException("No mapping class found!");
-            }
         }
 
         /// <summary>
         /// Determines whether a type is a subclass of entity mapping type
         /// </summary>
-        /// <param name="mappingType">Type of the mapping.</param>
+        /// <param name="pMappingType">Type of the mapping.</param>
         /// <returns>
         /// 	<c>true</c> if it is mapping class; otherwise, <c>false</c>.
         /// </returns>
-        private bool IsMappingClass(Type mappingType)
+        private static bool isMappingClass(Type pMappingType)
         {
-            Type baseType = typeof (EntityTypeConfiguration<>);
-            if (mappingType.GetGenericTypeDefinition() == baseType)
-            {
+            var baseType = typeof (EntityTypeConfiguration<>);
+            
+            if (pMappingType.IsGenericType
+                 && pMappingType.GetGenericTypeDefinition() == baseType)
                 return true;
-            }
-            if ((mappingType.BaseType != null) &&
-                !mappingType.BaseType.IsAbstract &&
-                mappingType.BaseType.IsGenericType)
+
+            if ((pMappingType.BaseType != null) &&
+                !pMappingType.BaseType.IsAbstract &&
+                pMappingType.BaseType.IsGenericType)
             {
-                return IsMappingClass(mappingType.BaseType);
+                return isMappingClass(pMappingType.BaseType);
             }
+
             return false;
         }
 
