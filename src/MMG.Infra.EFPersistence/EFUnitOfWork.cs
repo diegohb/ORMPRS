@@ -11,6 +11,7 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Objects;
 using MMG.Core.Persistence;
+using MMG.Core.Persistence.Exceptions;
 
 namespace MMG.Infra.EFPersistence
 {
@@ -39,7 +40,7 @@ namespace MMG.Infra.EFPersistence
         {
             if (_transaction != null)
             {
-                throw new ApplicationException
+                throw new PersistenceException
                     ("Cannot begin a new transaction while an existing transaction is still running. " +
                      "Please commit or rollback the existing transaction before starting a new one.");
             }
@@ -50,7 +51,7 @@ namespace MMG.Infra.EFPersistence
         public void RollBackTransaction()
         {
             if (_transaction == null)
-                throw new ApplicationException("Cannot roll back a transaction while there is no transaction running.");
+                throw new PersistenceException("Cannot roll back a transaction while there is no transaction running.");
 
             if (!IsInTransaction) return;
 
@@ -61,7 +62,7 @@ namespace MMG.Infra.EFPersistence
         public void CommitTransaction()
         {
             if (_transaction == null)
-                throw new ApplicationException("There is no transaction running to commit.");
+                throw new PersistenceException("There is no transaction running to commit.");
 
             try
             {
@@ -80,7 +81,7 @@ namespace MMG.Infra.EFPersistence
         {
             if (IsInTransaction)
             {
-                throw new ApplicationException("A transaction is running. Call CommitTransaction instead.");
+                throw new PersistenceException("A transaction is running. Call CommitTransaction instead.");
             }
             ((IObjectContextAdapter) _dbContext).ObjectContext.SaveChanges();
         }
@@ -89,7 +90,7 @@ namespace MMG.Infra.EFPersistence
         {
             if (IsInTransaction)
             {
-                throw new ApplicationException("A transaction is running. Call CommitTransaction instead.");
+                throw new PersistenceException("A transaction is running. Call CommitTransaction instead.");
             }
 
             ((IObjectContextAdapter) _dbContext).ObjectContext.SaveChanges(pSaveOptions);

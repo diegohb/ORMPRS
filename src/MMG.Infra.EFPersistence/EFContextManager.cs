@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using MMG.Core.Persistence;
+using MMG.Core.Persistence.Exceptions;
 
 namespace MMG.Infra.EFPersistence
 {
@@ -67,7 +68,7 @@ namespace MMG.Infra.EFPersistence
             }
             if ((Storage != null) && (Storage != pStorage))
             {
-                throw new ApplicationException("A storage mechanism has already been configured for this application");
+                throw new PersistenceException("A storage mechanism has already been configured for this application");
             }
             _storage = pStorage;
         }
@@ -107,7 +108,7 @@ namespace MMG.Infra.EFPersistence
 
             if (Storage == null)
             {
-                throw new ApplicationException("An IDbContextStorage has not been initialized");
+                throw new PersistenceException("An IDbContextStorage has not been initialized");
             }
 
             IDbContext context = null;
@@ -115,7 +116,7 @@ namespace MMG.Infra.EFPersistence
             {
                 if (!_dbContextBuilders.ContainsKey(pKey))
                 {
-                    throw new ApplicationException("An DbContextBuilder does not exist with a key of " + pKey);
+                    throw new PersistenceException("An DbContextBuilder does not exist with a key of " + pKey);
                 }
 
                 context = Storage.GetDbContextForKey(pKey);
