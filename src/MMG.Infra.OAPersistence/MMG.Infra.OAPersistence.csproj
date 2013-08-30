@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="DynamicMetadataSource.cs" />
     <Compile Include="OAContextBuilder.cs" />
+    <Compile Include="OAContextConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

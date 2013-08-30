@@ -20,17 +20,19 @@ namespace MMG.Core.OAPersistence
         private readonly DynamicMetadataSource _metadataSource;
         private readonly string _connectionStringName;
         private readonly bool _updateDatabaseSchema;
+        private readonly string _backendConfig;
 
-        public OAContextBuilder(string pConnectionStringName, IEnumerable<string> pMappingAssemblies, bool pUpdateDatabaseSchema)
+        public OAContextBuilder(string pConnectionStringName, OAContextConfiguration pContextConfig)
         {
             _connectionStringName = pConnectionStringName;
-            _updateDatabaseSchema = pUpdateDatabaseSchema;
-            _metadataSource = new DynamicMetadataSource(getMappingConfigurations(pMappingAssemblies));
+            _updateDatabaseSchema = pContextConfig.UpdateDatabaseSchema;
+            _backendConfig = pContextConfig.BackendConfig;
+            _metadataSource = new DynamicMetadataSource(getMappingConfigurations(pContextConfig.MappingAssemblies));
         }
 
         public TContext BuildDbContext()
         {
-            var backendConfig = new BackendConfiguration { Backend = "mssql" };
+            var backendConfig = new BackendConfiguration { Backend = _backendConfig };
             var dbContext = (TContext)new OpenAccessContext(_connectionStringName, backendConfig, _metadataSource);
             if (_updateDatabaseSchema)
                 updateSchema(dbContext.GetSchemaHandler());
