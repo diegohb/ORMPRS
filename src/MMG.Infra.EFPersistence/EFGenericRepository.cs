@@ -161,14 +161,14 @@ namespace MMG.Infra.EFPersistence
             DbContext.Set<TEntity>().Add(entity);
         }
 
-        public void Attach<TEntity>(TEntity entity) where TEntity : class
+        public TEntity Attach<TEntity>(TEntity entity) where TEntity : class
         {
             if (entity == null)
             {
                 throw new ArgumentNullException("entity");
             }
 
-            DbContext.Set<TEntity>().Attach(entity);
+            return DbContext.Set<TEntity>().Attach(entity);
         }
 
         public void Delete<TEntity>(TEntity entity) where TEntity : class
