@@ -89,7 +89,7 @@ namespace MMG.Core.Persistence
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        void Attach<TEntity>(TEntity entity) where TEntity : class;
+        TEntity Attach<TEntity>(TEntity entity) where TEntity : class;
 
         /// <summary>
         /// Deletes the specified entity.
@@ -118,7 +118,7 @@ namespace MMG.Core.Persistence
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        void Update<TEntity>(TEntity entity) where TEntity : class;
+        TEntity Update<TEntity>(TEntity entity) where TEntity : class;
 
         /// <summary>
         /// Finds entities based on provided criteria.

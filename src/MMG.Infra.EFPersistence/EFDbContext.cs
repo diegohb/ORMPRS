@@ -1,11 +1,12 @@
 ﻿// *************************************************
 // MMG.Infra.EFPersistence.EFDbContext.cs
-// Last Modified: 08/29/2013 3:10 PM
+// Last Modified: 08/30/2013 1:24 PM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
 using System.Data;
 using System.Data.Entity;
+using System.Data.Objects;
 using MMG.Core.Persistence;
 
 namespace MMG.Infra.EFPersistence
@@ -15,6 +16,9 @@ namespace MMG.Infra.EFPersistence
     /// </summary>
     public abstract class EFDbContext : DbContext, IDbContext
     {
+        public EFDbContext(ObjectContext pObjectContext, bool pDBContextOwnsObjectContext)
+            : base(pObjectContext, pDBContextOwnsObjectContext) {}
+
         public void Add<TEntity>(TEntity pEntity) where TEntity : class, IDbEntity
         {
             Set<TEntity>().Add(pEntity);

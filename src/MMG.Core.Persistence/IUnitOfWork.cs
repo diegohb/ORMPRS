@@ -16,7 +16,7 @@ namespace MMG.Core.Persistence
 
         void BeginTransaction();
 
-        void BeginTransaction(IsolationLevel isolationLevel);
+        void BeginTransaction(IsolationLevel pIsolationLevel);
 
         void RollBackTransaction();
 

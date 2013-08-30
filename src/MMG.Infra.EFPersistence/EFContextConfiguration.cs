@@ -1,6 +1,6 @@
 ﻿// *************************************************
 // MMG.Infra.EFPersistence.EFContextConfiguration.cs
-// Last Modified: 08/29/2013 2:30 PM
+// Last Modified: 08/30/2013 11:41 AM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
@@ -21,8 +21,6 @@ namespace MMG.Infra.EFPersistence
         {
             MappingAssemblies = pMappingAssemblies.ToList();
         }
-
-        public string ConnectionStringName { get; set; }
 
         public IList<string> MappingAssemblies { get; set; }
 
