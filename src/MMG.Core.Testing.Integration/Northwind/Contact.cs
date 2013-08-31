@@ -4,7 +4,6 @@
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
-using System.Data.Entity.ModelConfiguration;
 using MMG.Core.Persistence;
 
 namespace MMG.Core.Testing.Integration.Northwind
@@ -20,16 +19,5 @@ namespace MMG.Core.Testing.Integration.Northwind
         public string Phone { get; set; }
 
         public string Fax { get; set; }
-    }
-
-    public class ContactMapping : ComplexTypeConfiguration<Contact>, IMapEntityToDb<Contact>
-    {
-        public ContactMapping()
-        {
-            Property(p => p.Name).HasColumnName("ContactName").HasMaxLength(30);
-            Property(p => p.Title).HasColumnName("ContactTitle").HasMaxLength(30);
-            Property(p => p.Phone).HasColumnName("Phone").HasMaxLength(24);
-            Property(p => p.Fax).HasColumnName("Fax").HasMaxLength(24);
-        }
     }
 }

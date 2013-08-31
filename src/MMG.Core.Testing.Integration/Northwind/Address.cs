@@ -4,7 +4,6 @@
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
-using System.Data.Entity.ModelConfiguration;
 using MMG.Core.Persistence;
 
 namespace MMG.Core.Testing.Integration.Northwind
@@ -20,17 +19,5 @@ namespace MMG.Core.Testing.Integration.Northwind
         public string PostalCode { get; set; }
 
         public string Country { get; set; }
-    }
-
-    public class AddressMapping : ComplexTypeConfiguration<Address>, IMapEntityToDb<Address>
-    {
-        public AddressMapping()
-        {
-            Property(p => p.Street).HasColumnName("Address").HasMaxLength(60);
-            Property(p => p.City).HasColumnName("City").HasMaxLength(15);
-            Property(p => p.Region).HasColumnName("Region").HasMaxLength(15);
-            Property(p => p.PostalCode).HasColumnName("PostalCode").HasMaxLength(60);
-            Property(p => p.Country).HasColumnName("Country").HasMaxLength(15);
-        }
     }
 }

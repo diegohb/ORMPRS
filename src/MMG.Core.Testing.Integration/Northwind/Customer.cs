@@ -4,7 +4,6 @@
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
-using System.Data.Entity.ModelConfiguration;
 using MMG.Core.Persistence;
 
 namespace MMG.Core.Testing.Integration.Northwind
@@ -16,16 +15,5 @@ namespace MMG.Core.Testing.Integration.Northwind
         public string Name { get; set; }
 
         public virtual Contact Contact { get; set; }
-    }
-
-    public class CustomerMapping : EntityTypeConfiguration<Customer>, IMapEntityToDb<Customer>
-    {
-        public CustomerMapping()
-        {
-            ToTable("Customers");
-            HasKey(p => p.Id);
-            Property(p => p.Id).HasColumnName("CustomerID").HasMaxLength(5);
-            Property(p => p.Name).HasColumnName("CompanyName").HasMaxLength(40).IsRequired();
-        }
     }
 }

@@ -31,6 +31,8 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+    <EnhancerAssembly>enhancer.exe</EnhancerAssembly>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,6 +42,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -48,6 +51,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework">
@@ -64,8 +68,22 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Xml" />
+    <Reference Include="Telerik.OpenAccess, Version=2013.2.702.1, Culture=neutral, PublicKeyToken=7ce17eeaf1d59342, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\OpenAccess.CodeFirst.2013.2.702.1\lib\Telerik.OpenAccess.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.OpenAccess.35.Extensions, Version=2013.2.702.1, Culture=neutral, PublicKeyToken=7ce17eeaf1d59342, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\OpenAccess.CodeFirst.2013.2.702.1\lib\Telerik.OpenAccess.35.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.OpenAccess.Runtime">
+      <HintPath>..\..\..\packages\OpenAccess.CodeFirst.2013.2.702.1\lib\Telerik.OpenAccess.Runtime.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EFPersistence\DBMapping\AddressEFMapping.cs" />
+    <Compile Include="EFPersistence\DBMapping\ContactEFMapping.cs" />
+    <Compile Include="EFPersistence\DBMapping\CustomerEFMapping.cs" />
     <Compile Include="EFPersistence\EFContextBuilderTests.cs" />
     <Compile Include="EFPersistence\EFContextManagerTests.cs" />
     <Compile Include="Northwind\Address.cs" />
@@ -79,11 +97,16 @@
     <Compile Include="Northwind\Ship.cs" />
     <Compile Include="Northwind\Shipper.cs" />
     <Compile Include="Northwind\Supplier.cs" />
+    <Compile Include="OAPersistence\OAContextManagerTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +117,10 @@
     <ProjectReference Include="..\MMG.Infra.EFPersistence\MMG.Infra.EFPersistence.csproj">
       <Project>{E8B8E922-308E-4FCE-9BAA-BBED6850E69D}</Project>
       <Name>MMG.Infra.EFPersistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MMG.Infra.OAPersistence\MMG.Infra.OAPersistence.csproj">
+      <Project>{2d946466-fb86-427d-87fc-f26b2518c7c9}</Project>
+      <Name>MMG.Infra.OAPersistence</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -135,6 +162,10 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+  <Import Project="..\..\..\packages\OpenAccess.CodeFirst.2013.2.702.1\tools\enhancer\OpenAccess.targets" Condition="Exists('..\..\..\packages\OpenAccess.CodeFirst.2013.2.702.1\tools\enhancer\OpenAccess.targets')" />
+  <Target Name="BeforeBuild">
+    <Error Text="Failed to import OpenAccess.targets from ..\..\..\packages\OpenAccess.CodeFirst.2013.2.702.1\tools\enhancer\OpenAccess.targets. Please make sure that the OpenAccess package is available and installed in that location. You can use the &quot;Enable NuGet Package Restore&quot; on your solution, or restore the package manually. You will need to reload the project in order for enhancing to occur. In order to run this on in a build environment you must ensure the build process restores the package before building the solution." Condition="!Exists('..\..\..\packages\OpenAccess.CodeFirst.2013.2.702.1\tools\enhancer\OpenAccess.targets')" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
