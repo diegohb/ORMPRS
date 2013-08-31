@@ -32,7 +32,8 @@ namespace MMG.Infra.EFPersistence
             _recreateDatabaseIfExists = pContextConfig.RecreateDatabaseIfExists;
             _lazyLoadingEnabled = pContextConfig.LazyLoadingEnabled;
 
-            addConfigurations(pContextConfig.MappingAssemblies);
+            if (pContextConfig.MappingAssemblies.Count > 0)
+                addConfigurations(pContextConfig.MappingAssemblies);
         }
 
         /// <summary>
