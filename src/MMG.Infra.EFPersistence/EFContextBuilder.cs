@@ -108,9 +108,10 @@ namespace MMG.Infra.EFPersistence
         private static bool isMappingClass(Type pMappingType)
         {
             var baseType = typeof (EntityTypeConfiguration<>);
+            var complexConfigType = typeof (ComplexTypeConfiguration<>);
             
             if (pMappingType.IsGenericType
-                 && pMappingType.GetGenericTypeDefinition() == baseType)
+                 && (pMappingType.GetGenericTypeDefinition() == baseType || pMappingType.GetGenericTypeDefinition() == complexConfigType))
                 return true;
 
             if ((pMappingType.BaseType != null) &&
