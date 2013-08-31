@@ -15,6 +15,7 @@
     <SccLocalPath>Plastic SCM</SccLocalPath>
     <SccAuxPath>Plastic SCM</SccAuxPath>
     <SccProvider>Plastic SCM Source Control Service:{774e58ba-f1b9-40a7-b676-834fa2c220fe}</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,13 +35,37 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\..\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EFPersistence\EFContextManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MMG.Core.Persistence\MMG.Core.Persistence.csproj">
+      <Project>{E015148C-1A1B-492F-A024-2C1F574AD202}</Project>
+      <Name>MMG.Core.Persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MMG.Infra.EFPersistence\MMG.Infra.EFPersistence.csproj">
+      <Project>{E8B8E922-308E-4FCE-9BAA-BBED6850E69D}</Project>
+      <Name>MMG.Infra.EFPersistence</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
