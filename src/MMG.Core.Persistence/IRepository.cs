@@ -62,6 +62,22 @@ namespace MMG.Core.Persistence
         TEntity Single<TEntity>(ISpecification<TEntity> criteria) where TEntity : class;
 
         /// <summary>
+        /// Gets one or empty entity based on matching criteria
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="criteria">The criteria.</param>
+        /// <returns></returns>
+        TEntity SingleOrDefault<TEntity>(Expression<Func<TEntity, bool>> criteria) where TEntity : class;
+
+        /// <summary>
+        /// Gets one or empty entity based on matching criteria
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="pSpecification">The criteria.</param>
+        /// <returns></returns>
+        TEntity SingleOrDefault<TEntity>(ISpecification<TEntity> pSpecification) where TEntity : class;
+
+        /// <summary>
         /// Firsts the specified predicate.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
