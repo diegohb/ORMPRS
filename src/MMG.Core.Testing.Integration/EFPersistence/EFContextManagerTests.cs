@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using MMG.Core.Persistence;
+using MMG.Core.Persistence.Exceptions;
 using MMG.Core.Persistence.Impl;
 using MMG.Infra.EFPersistence;
 using NUnit.Framework;
@@ -17,15 +18,17 @@ namespace MMG.Core.Testing.Integration.EFPersistence
     [TestFixture]
     public class EFContextManagerTests
     {
+        private const string northwindDBConnectionName = "NorthwindDB";
+
         [Test]
         public void InitializeManager()
         {
             doAction(() => initializeStorage());
-            /*Assert.IsNull(EFContextManager.Instance.CurrentFor("TechnicalAssistanceDB"));
-            EFContextManager.Instance.AddContextBuilder("TechnicalAssistanceDB", new EFContextConfiguration(new[] { "MMG.Core.Testing.Integration" }));
-            var dbContext = EFContextManager.Instance.CurrentFor("TechnicalAssistanceDB");
+            Assert.Throws<PersistenceException>(() => EFContextManager.Instance.CurrentFor(northwindDBConnectionName));
+            EFContextManager.Instance.AddContextBuilder(northwindDBConnectionName, new EFContextConfiguration(new[] { "MMG.Core.Testing.Integration" }));
+            var dbContext = EFContextManager.Instance.CurrentFor(northwindDBConnectionName);
             Assert.IsNotNull(dbContext);
-            Assert.IsInstanceOf<EFDbContext>(dbContext);*/
+            Assert.IsInstanceOf<EFDbContext>(dbContext);
         }
 
         private static void initializeStorage()
