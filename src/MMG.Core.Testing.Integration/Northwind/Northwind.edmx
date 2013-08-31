@@ -249,7 +249,7 @@
     <EntitySet Name="Categories" EntityType="Entity.Category" />
     <EntitySet Name="Customers" EntityType="Entity.Customer" />
     <EntitySet Name="Employees" EntityType="Entity.Employee" />
-    <EntitySet Name="Order_Details" EntityType="Entity.Order_Detail" />
+    <EntitySet Name="OrderDetails" EntityType="Entity.OrderDetail" />
     <EntitySet Name="Orders" EntityType="Entity.Order" />
     <EntitySet Name="Products" EntityType="Entity.Product" />
     <EntitySet Name="Shippers" EntityType="Entity.Shipper" />
@@ -266,13 +266,13 @@
       <End Role="Employees" EntitySet="Employees" />
       <End Role="Orders" EntitySet="Orders" />
     </AssociationSet>
-    <AssociationSet Name="Order_Details_FK00" Association="Entity.Order_Details_FK00">
+    <AssociationSet Name="OrderDetails_FK00" Association="Entity.OrderDetails_FK00">
       <End Role="Products" EntitySet="Products" />
-      <End Role="Order_Details" EntitySet="Order_Details" />
+      <End Role="OrderDetails" EntitySet="OrderDetails" />
     </AssociationSet>
-    <AssociationSet Name="Order_Details_FK01" Association="Entity.Order_Details_FK01">
+    <AssociationSet Name="OrderDetails_FK01" Association="Entity.OrderDetails_FK01">
       <End Role="Orders" EntitySet="Orders" />
-      <End Role="Order_Details" EntitySet="Order_Details" />
+      <End Role="OrderDetails" EntitySet="OrderDetails" />
     </AssociationSet>
     <AssociationSet Name="Orders_FK01" Association="Entity.Orders_FK01">
       <End Role="Shippers" EntitySet="Shippers" />
@@ -332,7 +332,7 @@
     <Property Name="Reports_To" Type="Int32" />
     <NavigationProperty Name="Orders" Relationship="Entity.Orders_FK02" FromRole="Employees" ToRole="Orders" />
   </EntityType>
-  <EntityType Name="Order_Detail">
+  <EntityType Name="OrderDetail">
     <Key>
       <PropertyRef Name="Order_ID" />
       <PropertyRef Name="Product_ID" />
@@ -342,8 +342,8 @@
     <Property Name="Unit_Price" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
     <Property Name="Quantity" Type="Int16" Nullable="false" />
     <Property Name="Discount" Type="Single" Nullable="false" />
-    <NavigationProperty Name="Product" Relationship="Entity.Order_Details_FK00" FromRole="Order_Details" ToRole="Products" />
-    <NavigationProperty Name="Order" Relationship="Entity.Order_Details_FK01" FromRole="Order_Details" ToRole="Orders" />
+    <NavigationProperty Name="Product" Relationship="Entity.OrderDetails_FK00" FromRole="OrderDetails" ToRole="Products" />
+    <NavigationProperty Name="Order" Relationship="Entity.OrderDetails_FK01" FromRole="OrderDetails" ToRole="Orders" />
   </EntityType>
   <EntityType Name="Order">
     <Key>
@@ -365,7 +365,7 @@
     <Property Name="Freight" Type="Decimal" Precision="19" Scale="4" />
     <NavigationProperty Name="Customer" Relationship="Entity.Orders_FK00" FromRole="Orders" ToRole="Customers" />
     <NavigationProperty Name="Employee" Relationship="Entity.Orders_FK02" FromRole="Orders" ToRole="Employees" />
-    <NavigationProperty Name="Order_Details" Relationship="Entity.Order_Details_FK01" FromRole="Orders" ToRole="Order_Details" />
+    <NavigationProperty Name="OrderDetails" Relationship="Entity.OrderDetails_FK01" FromRole="Orders" ToRole="OrderDetails" />
     <NavigationProperty Name="Shipper" Relationship="Entity.Orders_FK01" FromRole="Orders" ToRole="Shippers" />
   </EntityType>
   <EntityType Name="Product">
@@ -384,7 +384,7 @@
     <Property Name="Reorder_Level" Type="Int16" />
     <Property Name="Discontinued" Type="Boolean" Nullable="false" />
     <NavigationProperty Name="Category" Relationship="Entity.Products_FK01" FromRole="Products" ToRole="Categories" />
-    <NavigationProperty Name="Order_Details" Relationship="Entity.Order_Details_FK00" FromRole="Products" ToRole="Order_Details" />
+    <NavigationProperty Name="OrderDetails" Relationship="Entity.OrderDetails_FK00" FromRole="Products" ToRole="OrderDetails" />
     <NavigationProperty Name="Supplier" Relationship="Entity.Products_FK00" FromRole="Products" ToRole="Suppliers" />
   </EntityType>
   <EntityType Name="Shipper">
@@ -448,28 +448,28 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="Order_Details_FK00">
+  <Association Name="OrderDetails_FK00">
     <End Role="Products" Type="Entity.Product" Multiplicity="1" />
-    <End Role="Order_Details" Type="Entity.Order_Detail" Multiplicity="*" />
+    <End Role="OrderDetails" Type="Entity.OrderDetail" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Products">
         <PropertyRef Name="Product_ID" />
       </Principal>
-      <Dependent Role="Order_Details">
+      <Dependent Role="OrderDetails">
         <PropertyRef Name="Product_ID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="Order_Details_FK01">
+  <Association Name="OrderDetails_FK01">
     <End Role="Orders" Type="Entity.Order" Multiplicity="1">
       <OnDelete Action="Cascade" />
     </End>
-    <End Role="Order_Details" Type="Entity.Order_Detail" Multiplicity="*" />
+    <End Role="OrderDetails" Type="Entity.OrderDetail" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Orders">
         <PropertyRef Name="Order_ID" />
       </Principal>
-      <Dependent Role="Order_Details">
+      <Dependent Role="OrderDetails">
         <PropertyRef Name="Order_ID" />
       </Dependent>
     </ReferentialConstraint>
@@ -552,8 +552,8 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Order_Details">
-      <EntityTypeMapping TypeName="Entity.Order_Detail">
+    <EntitySetMapping Name="OrderDetails">
+      <EntityTypeMapping TypeName="Entity.OrderDetail">
         <MappingFragment StoreEntitySet="Order Details">
           <ScalarProperty Name="Order_ID" ColumnName="Order ID" />
           <ScalarProperty Name="Product_ID" ColumnName="Product ID" />
@@ -637,7 +637,7 @@
         <EntityTypeShape EntityType="Entity.Category" Width="1.5" PointX="0.75" PointY="15.75" Height="1.9802864583333317" IsExpanded="true" />
         <EntityTypeShape EntityType="Entity.Customer" Width="1.5" PointX="0.75" PointY="1.625" Height="3.3263964843749996" IsExpanded="true" />
         <EntityTypeShape EntityType="Entity.Employee" Width="1.5" PointX="0.75" PointY="8.375" Height="4.2879036458333317" IsExpanded="true" />
-        <EntityTypeShape EntityType="Entity.Order_Detail" Width="1.5" PointX="5.25" PointY="2.125" Height="2.3648893229166656" IsExpanded="true" />
+        <EntityTypeShape EntityType="Entity.OrderDetail" Width="1.5" PointX="5.25" PointY="2.125" Height="2.3648893229166656" IsExpanded="true" />
         <EntityTypeShape EntityType="Entity.Order" Width="1.5" PointX="3" PointY="1" Height="4.4802050781250031" IsExpanded="true" />
         <EntityTypeShape EntityType="Entity.Product" Width="1.5" PointX="3" PointY="16.875" Height="3.7109993489583317" IsExpanded="true" />
         <EntityTypeShape EntityType="Entity.Shipper" Width="1.5" PointX="0.75" PointY="13.375" Height="1.5956835937499996" IsExpanded="true" />
@@ -657,12 +657,12 @@
           <ConnectorPoint PointX="3.75" PointY="10.518951822916666" />
           <ConnectorPoint PointX="3.75" PointY="5.4802050781250031" />
         </AssociationConnector>
-        <AssociationConnector Association="Entity.Order_Details_FK00" ManuallyRouted="false">
+        <AssociationConnector Association="Entity.OrderDetails_FK00" ManuallyRouted="false">
           <ConnectorPoint PointX="4.5" PointY="18.730499674479166" />
           <ConnectorPoint PointX="6" PointY="18.730499674479166" />
           <ConnectorPoint PointX="6" PointY="4.4898893229166656" />
         </AssociationConnector>
-        <AssociationConnector Association="Entity.Order_Details_FK01" ManuallyRouted="false">
+        <AssociationConnector Association="Entity.OrderDetails_FK01" ManuallyRouted="false">
           <ConnectorPoint PointX="4.5" PointY="3.3074446614583328" />
           <ConnectorPoint PointX="5.25" PointY="3.3074446614583328" />
         </AssociationConnector>

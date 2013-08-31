@@ -19,11 +19,17 @@ namespace MMG.Core.Testing.Integration.Northwind
     
     public partial class NorthwindDB : EFDbContext, IDbContext
     {
+    	static NorthwindDB()
+        {
+            Database.SetInitializer<NorthwindDB>(null);
+        }
+    
         public NorthwindDB()
             : base("name=NorthwindDB")
         {
             this.Configuration.LazyLoadingEnabled = false;
         }
+    
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -48,11 +54,11 @@ namespace MMG.Core.Testing.Integration.Northwind
     		{
                 get { return this.EmployeesSet; }
     		}
-        public virtual DbSet<Order_Detail> Order_DetailsSet { get; set; }
+        public virtual DbSet<OrderDetail> OrderDetailsSet { get; set; }
     	
-    	IQueryable<Order_Detail> Order_Details
+    	IQueryable<OrderDetail> OrderDetails
     		{
-                get { return this.Order_DetailsSet; }
+                get { return this.OrderDetailsSet; }
     		}
         public virtual DbSet<Order> OrdersSet { get; set; }
     	

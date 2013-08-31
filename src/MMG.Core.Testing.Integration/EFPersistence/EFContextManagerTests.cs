@@ -25,7 +25,7 @@ namespace MMG.Core.Testing.Integration.EFPersistence
         {
             doAction(() => initializeStorage());
             Assert.Throws<PersistenceException>(() => EFContextManager.Instance.CurrentFor(northwindDBConnectionName));
-            EFContextManager.Instance.AddContextBuilder(northwindDBConnectionName, new EFContextConfiguration(new[] { "MMG.Core.Testing.Integration" }));
+            EFContextManager.Instance.AddContextBuilder(northwindDBConnectionName, new EFContextConfiguration());
             var dbContext = EFContextManager.Instance.CurrentFor(northwindDBConnectionName);
             Assert.IsNotNull(dbContext);
             Assert.IsInstanceOf<EFDbContext>(dbContext);

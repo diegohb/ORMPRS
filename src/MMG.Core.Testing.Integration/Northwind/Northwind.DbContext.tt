@@ -57,6 +57,11 @@ using System.Data.Objects;
 
 <#=Accessibility.ForType(container)#> partial class <#=Code.Escape(container)#> : EFDbContext, IDbContext
 {
+	static <#=Code.Escape(container)#>()
+    {
+        Database.SetInitializer<<#=Code.Escape(container)#>>(null);
+    }
+
     public <#=Code.Escape(container)#>()
         : base("name=<#=container.Name#>")
     {
@@ -64,6 +69,7 @@ using System.Data.Objects;
         WriteLazyLoadingEnabled(container);
 #>
     }
+
 
     protected override void OnModelCreating(DbModelBuilder modelBuilder)
     {

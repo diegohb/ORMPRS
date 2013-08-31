@@ -61,46 +61,36 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SqlServerCe.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\..\packages\EntityFramework.SqlServerCompact.4.3.6\lib\net40\System.Data.SqlServerCe.Entity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EFPersistence\EFContextManagerTests.cs" />
-    <Compile Include="Northwind\Category.cs">
-      <DependentUpon>NorthwindEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Northwind\Customer.cs">
-      <DependentUpon>NorthwindEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Northwind\Employee.cs">
-      <DependentUpon>NorthwindEntities.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Northwind\Address.cs" />
+    <Compile Include="Northwind\Category.cs" />
+    <Compile Include="Northwind\Contact.cs" />
+    <Compile Include="Northwind\Customer.cs" />
+    <Compile Include="Northwind\Employee.cs" />
     <Compile Include="Northwind\Northwind.DbContext.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Northwind.DbContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="Northwind\NorthwindEntities.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>NorthwindEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Northwind\Order.cs">
-      <DependentUpon>NorthwindEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Northwind\Order_Detail.cs">
-      <DependentUpon>NorthwindEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Northwind\Product.cs">
-      <DependentUpon>NorthwindEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Northwind\Shipper.cs">
-      <DependentUpon>NorthwindEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Northwind\Supplier.cs">
-      <DependentUpon>NorthwindEntities.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Northwind\Order.cs" />
+    <Compile Include="Northwind\OrderDetail.cs" />
+    <Compile Include="Northwind\Product.cs" />
+    <Compile Include="Northwind\Ship.cs" />
+    <Compile Include="Northwind\Shipper.cs" />
+    <Compile Include="Northwind\Supplier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -112,10 +102,6 @@
     <EntityDeploy Include="Northwind\Northwind.edmx">
       <LastGenOutput>Northwind.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="Northwind\NorthwindEntities.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>NorthwindEntities.cs</LastGenOutput>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +152,13 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
+    xcopy /s /y "E:\projects\packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\x86\*.*" "$(TargetDir)x86"
+    if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
+    xcopy /s /y "E:\projects\packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
