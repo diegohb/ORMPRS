@@ -21,6 +21,7 @@ namespace MMG.Core.Testing.Integration.EFPersistence
         public void InitializeManager()
         {
             Utility.DoTimedAction(() => initializeStorage());
+            Utility.DoTimedAction(() => verifyInitStorageOnlyOnce());
             Utility.DoTimedAction(() => configureNorthwindContext());
             Utility.DoTimedAction(() => configureSecondContext());
             Utility.DoTimedAction(() => confirmContextCountInStorage());
@@ -34,6 +35,12 @@ namespace MMG.Core.Testing.Integration.EFPersistence
             EFContextManager.Instance.InitStorage(storage);
             Assert.IsNotNull(EFContextManager.Instance.Storage);
             Assert.IsInstanceOf<IDbContextStorage>(EFContextManager.Instance.Storage);
+        }
+
+        private static void verifyInitStorageOnlyOnce()
+        {
+            var secondStorage = new SimpleDbContextStorage();
+            Assert.Throws<PersistenceException>(() => EFContextManager.Instance.InitStorage(secondStorage));
         }
 
         private static void configureNorthwindContext()
@@ -70,11 +77,27 @@ namespace MMG.Core.Testing.Integration.EFPersistence
             var repo2 = new EFGenericRepository(Utility.NorthwindAltDBConnectionName);
 
             var bolidCustRepo1 = repo1.GetByKey<Customer>("BOLID");
-            var bolidCustRepo2 = repo2.GetByKey<Customer>("BOLID");
-            
-            Assert.IsNotNull(bolidCustRepo1);
-            Assert.IsNotNull(bolidCustRepo2);
+            var bolidCustRepo1SameContext = repo1.GetByKey<Customer>("BOLID");
 
+            var bolidCustRepo2 = repo2.GetByKey<Customer>("BOLID");
+            Assert.IsNotNull(bolidCustRepo2);
+            Assert.IsNotNull(bolidCustRepo1);
+            
+            bolidCustRepo1.Contact.Address.Region = "Test";
+            repo1.Update(bolidCustRepo1);
+            repo1.UnitOfWork.SaveChanges();
+            Assert.AreEqual(bolidCustRepo1.Contact.Address.Region, bolidCustRepo1SameContext.Contact.Address.Region);
+            Assert.AreSame(bolidCustRepo1, bolidCustRepo1SameContext);
+            Assert.IsNullOrEmpty(bolidCustRepo2.Contact.Address.Region); //not connected/stateful entity because its from a diff context
+            
+            var bolidCustRepo2FreshContext = repo2.GetByKey<Customer>("BOLID");
+            Assert.IsNotNull(bolidCustRepo2FreshContext);
+            Assert.AreNotSame(bolidCustRepo1, bolidCustRepo2FreshContext);
+
+            //revert changes
+            bolidCustRepo1.Contact.Address.Region = null;
+            repo1.Update(bolidCustRepo1);
+            repo1.UnitOfWork.SaveChanges();
         }
 
     }
