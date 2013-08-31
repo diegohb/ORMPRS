@@ -8,6 +8,7 @@ using System;
 
 namespace MMG.Core.Persistence.Exceptions
 {
+    [Serializable]
     public class PersistenceException : ApplicationException
     {
         public PersistenceException() {}
