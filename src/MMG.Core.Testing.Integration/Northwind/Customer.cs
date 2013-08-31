@@ -1,22 +1,31 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+// *************************************************
+// MMG.Core.Testing.Integration.Customer.cs
+// Last Modified: 08/31/2013 2:57 PM
+// Modified By: Bustamante, Diego (bustamd1)
+// *************************************************
+
+using System.Data.Entity.ModelConfiguration;
+using MMG.Core.Persistence;
 
 namespace MMG.Core.Testing.Integration.Northwind
 {
-    [Table("Customers")]
-    [DisplayColumn("Name")]
-    public class Customer
+    public class Customer : IDbEntity
     {
-        [Key]
-        [Column("Customer ID")]
-        [MaxLength(5)]
         public string Id { get; set; }
 
-        [Required]
-        [Column("Company Name")]
-        [MaxLength(40)]
         public string Name { get; set; }
 
         public virtual Contact Contact { get; set; }
+    }
+
+    public class CustomerMapping : EntityTypeConfiguration<Customer>, IMapEntityToDb<Customer>
+    {
+        public CustomerMapping()
+        {
+            ToTable("Customers");
+            HasKey(p => p.Id);
+            Property(p => p.Id).HasColumnName("CustomerID").HasMaxLength(5);
+            Property(p => p.Name).HasColumnName("CompanyName").HasMaxLength(40).IsRequired();
+        }
     }
 }

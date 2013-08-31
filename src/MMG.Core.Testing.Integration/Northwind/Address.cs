@@ -1,30 +1,36 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿// *************************************************
+// MMG.Core.Testing.Integration.Address.cs
+// Last Modified: 08/31/2013 4:04 PM
+// Modified By: Bustamante, Diego (bustamd1)
+// *************************************************
+
+using System.Data.Entity.ModelConfiguration;
+using MMG.Core.Persistence;
 
 namespace MMG.Core.Testing.Integration.Northwind
 {
-    [ComplexType]
-    [DisplayColumn("Street")]
-    public class Address
+    public class Address : IDbEntity
     {
-        [Column("Address")]
-        [MaxLength(60)]
         public string Street { get; set; }
 
-        [Column("City")]
-        [MaxLength(15)]
         public string City { get; set; }
 
-        [Column("Region")]
-        [MaxLength(15)]
         public string Region { get; set; }
 
-        [Column("Postal Code")]
-        [MaxLength(60)]
         public string PostalCode { get; set; }
 
-        [Column("Country")]
-        [MaxLength(15)]
         public string Country { get; set; }
+    }
+
+    public class AddressMapping : ComplexTypeConfiguration<Address>, IMapEntityToDb<Address>
+    {
+        public AddressMapping()
+        {
+            Property(p => p.Street).HasColumnName("Address").HasMaxLength(60);
+            Property(p => p.City).HasColumnName("City").HasMaxLength(15);
+            Property(p => p.Region).HasColumnName("Region").HasMaxLength(15);
+            Property(p => p.PostalCode).HasColumnName("PostalCode").HasMaxLength(60);
+            Property(p => p.Country).HasColumnName("Country").HasMaxLength(15);
+        }
     }
 }

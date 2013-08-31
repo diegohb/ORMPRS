@@ -4,13 +4,11 @@
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
-using System;
-using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
 using MMG.Core.Persistence;
 using MMG.Core.Persistence.Exceptions;
 using MMG.Core.Persistence.Impl;
+using MMG.Core.Testing.Integration.Northwind;
 using MMG.Infra.EFPersistence;
 using NUnit.Framework;
 
@@ -19,15 +17,14 @@ namespace MMG.Core.Testing.Integration.EFPersistence
     [TestFixture]
     public class EFContextManagerTests
     {
-        private const string northwindDBConnectionName = "NorthwindDB";
-
         [Test]
         public void InitializeManager()
         {
-            doAction(() => initializeStorage());
-            doAction(() => configureNorthwindContext());
-            doAction(()=> configureSecondContext());
-            doAction(()=> confirmContextCountInStorage());
+            Utility.DoTimedAction(() => initializeStorage());
+            Utility.DoTimedAction(() => configureNorthwindContext());
+            Utility.DoTimedAction(() => configureSecondContext());
+            Utility.DoTimedAction(() => confirmContextCountInStorage());
+            Utility.DoTimedAction(() => confirmContextsAreSeparate());
         }
 
         private static void initializeStorage()
@@ -41,19 +38,18 @@ namespace MMG.Core.Testing.Integration.EFPersistence
 
         private static void configureNorthwindContext()
         {
-            Assert.Throws<PersistenceException>(() => EFContextManager.Instance.CurrentFor(northwindDBConnectionName));
-            EFContextManager.Instance.AddContextBuilder(northwindDBConnectionName, new EFContextConfiguration());
-            var dbContext = EFContextManager.Instance.CurrentFor(northwindDBConnectionName);
+            Assert.Throws<PersistenceException>(() => EFContextManager.Instance.CurrentFor(Utility.NorthwindDBConnectionName));
+            EFContextManager.Instance.AddContextBuilder(Utility.NorthwindDBConnectionName, new EFContextConfiguration(new[] { "MMG.Core.Testing.Integration" }));
+            var dbContext = EFContextManager.Instance.CurrentFor(Utility.NorthwindDBConnectionName);
             Assert.IsNotNull(dbContext);
             Assert.IsInstanceOf<EFDbContext>(dbContext);
         }
 
         private static void configureSecondContext()
         {
-            const string altDBName = northwindDBConnectionName + "Alt";
-            Assert.Throws<PersistenceException>(() => EFContextManager.Instance.CurrentFor(altDBName));
-            EFContextManager.Instance.AddContextBuilder(altDBName, new EFContextConfiguration());
-            var dbContext = EFContextManager.Instance.CurrentFor(altDBName);
+            Assert.Throws<PersistenceException>(() => EFContextManager.Instance.CurrentFor(Utility.NorthwindAltDBConnectionName));
+            EFContextManager.Instance.AddContextBuilder(Utility.NorthwindAltDBConnectionName, new EFContextConfiguration(new[] { "MMG.Core.Testing.Integration" }));
+            var dbContext = EFContextManager.Instance.CurrentFor(Utility.NorthwindAltDBConnectionName);
             Assert.IsNotNull(dbContext);
             Assert.IsInstanceOf<EFDbContext>(dbContext);
         }
@@ -63,17 +59,23 @@ namespace MMG.Core.Testing.Integration.EFPersistence
             const int expectedCount = 2;
             var actualCount = EFContextManager.Instance.Storage.GetAllDbContexts().Count();
             Assert.AreEqual(expectedCount, actualCount);
+            var context1 = EFContextManager.Instance.Storage.GetAllDbContexts().First();
+            var context2 = EFContextManager.Instance.Storage.GetAllDbContexts().Last();
+            Assert.AreNotSame(context1, context2);
         }
 
-        protected static void doAction(Expression<Action> pAction)
+        private static void confirmContextsAreSeparate()
         {
-            Console.Write("Executing {0} ... ", pAction.Body);
-            var timer = new Stopwatch();
-            var act = pAction.Compile();
-            timer.Start();
-            act.Invoke();
-            timer.Stop();
-            Console.WriteLine("Executed successfully in {0} ms.", timer.ElapsedMilliseconds);
+            var repo1 = new EFGenericRepository(Utility.NorthwindDBConnectionName);
+            var repo2 = new EFGenericRepository(Utility.NorthwindAltDBConnectionName);
+
+            var bolidCustRepo1 = repo1.GetByKey<Customer>("BOLID");
+            var bolidCustRepo2 = repo2.GetByKey<Customer>("BOLID");
+            
+            Assert.IsNotNull(bolidCustRepo1);
+            Assert.IsNotNull(bolidCustRepo2);
+
         }
+
     }
 }
