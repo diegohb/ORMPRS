@@ -21,7 +21,7 @@ namespace MMG.Infra.EFPersistence
     /// <summary>
     /// Generic repository
     /// </summary>
-    public class EFGenericRepository : IRepository
+    public class EFGenericRepository : IRepository, IDisposable
     {
         private readonly string _connectionStringName;
         private DbContext _context;
@@ -292,8 +292,8 @@ namespace MMG.Infra.EFPersistence
             var entitySetName = container.BaseEntitySets
                                          .Where(pMeta => pMeta.ElementType.Name == className)
                                          .Select(pMeta => pMeta.Name).First();
-            
-            return string.Format("{0}.{1}", ((IObjectContextAdapter)DbContext).ObjectContext.DefaultContainerName, entitySetName);
+
+            return string.Format("{0}.{1}", objContext.DefaultContainerName, entitySetName);
         }
 
         private DbContext DbContext
@@ -309,6 +309,21 @@ namespace MMG.Infra.EFPersistence
                 }
                 return this._context;
             }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        
+        protected virtual void Dispose(bool pDisposing)
+        {
+            if (!pDisposing) return;
+            if (_context == null) return;
+
+            _context.Dispose();
+            _context = null;
         }
     }
 
