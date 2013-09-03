@@ -97,6 +97,9 @@
     <Compile Include="Northwind\Ship.cs" />
     <Compile Include="Northwind\Shipper.cs" />
     <Compile Include="Northwind\Supplier.cs" />
+    <Compile Include="OAPersistence\DBMapping\AddressOAMapping.cs" />
+    <Compile Include="OAPersistence\DBMapping\ContactOAMapping.cs" />
+    <Compile Include="OAPersistence\DBMapping\CustomerOAMapping.cs" />
     <Compile Include="OAPersistence\OAContextManagerTests.cs">
       <SubType>Code</SubType>
     </Compile>
