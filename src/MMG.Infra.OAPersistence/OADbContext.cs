@@ -1,6 +1,6 @@
 ﻿// *************************************************
 // MMG.Infra.OAPersistence.OADbContext.cs
-// Last Modified: 08/30/2013 1:26 PM
+// Last Modified: 09/03/2013 12:28 PM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
@@ -13,7 +13,7 @@ namespace MMG.Core.OAPersistence
     /// <summary>
     /// Abstract class that simply wraps the EntityFramework DbContext object and tags the object with <see cref="IDbContext"/>.
     /// </summary>
-    public abstract class OADbContext : OpenAccessContext, IDbContext
+    public class OADbContext : OpenAccessContext, IDbContext
     {
         #region Constructors
 
