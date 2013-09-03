@@ -83,7 +83,7 @@ namespace MMG.Core.Testing.Integration.EFPersistence
             Assert.IsNotNull(bolidCustRepo2);
             Assert.IsNotNull(bolidCustRepo1);
             
-            bolidCustRepo1.Contact.Address.Region = "Test";
+            /*bolidCustRepo1.Contact.Address.Region = "Test";
             repo1.Update(bolidCustRepo1);
             repo1.UnitOfWork.SaveChanges();
             Assert.AreEqual(bolidCustRepo1.Contact.Address.Region, bolidCustRepo1SameContext.Contact.Address.Region);
@@ -97,7 +97,7 @@ namespace MMG.Core.Testing.Integration.EFPersistence
             //revert changes
             bolidCustRepo1.Contact.Address.Region = null;
             repo1.Update(bolidCustRepo1);
-            repo1.UnitOfWork.SaveChanges();
+            repo1.UnitOfWork.SaveChanges();*/
         }
 
     }

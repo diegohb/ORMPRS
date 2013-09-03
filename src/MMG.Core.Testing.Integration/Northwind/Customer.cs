@@ -14,6 +14,6 @@ namespace MMG.Core.Testing.Integration.Northwind
 
         public string Name { get; set; }
 
-        public virtual Contact Contact { get; set; }
+        /*public virtual Contact Contact { get; set; }*/
     }
 }
