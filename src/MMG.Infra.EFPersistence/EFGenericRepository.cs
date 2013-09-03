@@ -21,7 +21,7 @@ namespace MMG.Infra.EFPersistence
     /// <summary>
     /// Generic repository
     /// </summary>
-    public class EFGenericRepository : IRepository
+    public class EFGenericRepository : IRepository, IDisposable
     {
         private readonly string _connectionStringName;
         private DbContext _context;
@@ -285,15 +285,15 @@ namespace MMG.Infra.EFPersistence
 
         private string getEntityName<TEntity>() where TEntity : class
         {
-            // PluralizationService pluralizer = PluralizationService.CreateService(CultureInfo.GetCultureInfo("en"));
-            // return string.Format("{0}.{1}", ((IObjectContextAdapter)DbContext).ObjectContext.DefaultContainerName, pluralizer.Pluralize(typeof(TEntity).Name));
+            // original - http://huyrua.wordpress.com/2011/04/13/entity-framework-4-poco-repository-and-specification-pattern-upgraded-to-ef-4-1/#comment-688
+            var className = typeof(TEntity).Name;
+            var objContext = ((IObjectContextAdapter)DbContext).ObjectContext;
+            var container = objContext.MetadataWorkspace.GetEntityContainer(objContext.DefaultContainerName, DataSpace.CSpace);
+            var entitySetName = container.BaseEntitySets
+                                         .Where(pMeta => pMeta.ElementType.Name == className)
+                                         .Select(pMeta => pMeta.Name).First();
 
-            // Thanks to Kamyar Paykhan -  http://huyrua.wordpress.com/2011/04/13/entity-framework-4-poco-repository-and-specification-pattern-upgraded-to-ef-4-1/#comment-688
-            string entitySetName = ((IObjectContextAdapter)DbContext).ObjectContext
-                                                                     .MetadataWorkspace
-                                                                     .GetEntityContainer(((IObjectContextAdapter)DbContext).ObjectContext.DefaultContainerName, DataSpace.CSpace)
-                                                                     .BaseEntitySets.First(pBaseSet => pBaseSet.ElementType.Name == typeof(TEntity).Name).Name;
-            return string.Format("{0}.{1}", ((IObjectContextAdapter)DbContext).ObjectContext.DefaultContainerName, entitySetName);
+            return string.Format("{0}.{1}", objContext.DefaultContainerName, entitySetName);
         }
 
         private DbContext DbContext
@@ -309,6 +309,21 @@ namespace MMG.Infra.EFPersistence
                 }
                 return this._context;
             }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        
+        protected virtual void Dispose(bool pDisposing)
+        {
+            if (!pDisposing) return;
+            if (_context == null) return;
+
+            _context.Dispose();
+            _context = null;
         }
     }
 

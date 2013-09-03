@@ -14,7 +14,7 @@ namespace MMG.Infra.EFPersistence
     /// <summary>
     /// Abstract class that simply wraps the EntityFramework DbContext object and tags the object with <see cref="IDbContext"/>.
     /// </summary>
-    public abstract class EFDbContext : DbContext, IDbContext
+    public class EFDbContext : DbContext, IDbContext
     {
         #region Constructors
 
@@ -27,12 +27,12 @@ namespace MMG.Infra.EFPersistence
         #endregion
 
 
-        public void Add<TEntity>(TEntity pEntity) where TEntity : class, IDbEntity
+        public virtual void Add<TEntity>(TEntity pEntity) where TEntity : class, IDbEntity
         {
             Set<TEntity>().Add(pEntity);
         }
 
-        public void CloseConnection()
+        public virtual void CloseConnection()
         {
             if (Database.Connection.State != ConnectionState.Closed)
                 Database.Connection.Close();

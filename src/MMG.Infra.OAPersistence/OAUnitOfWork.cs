@@ -6,6 +6,7 @@
 
 using System;
 using System.Data;
+using MMG.Core.Persistence.Exceptions;
 using Telerik.OpenAccess;
 using Telerik.OpenAccess.Data.Common;
 using IUnitOfWork = MMG.Core.Persistence.IUnitOfWork;
@@ -38,7 +39,7 @@ namespace MMG.Core.OAPersistence
         {
             if (_transaction != null)
             {
-                throw new ApplicationException
+                throw new PersistenceException
                     ("Cannot begin a new transaction while an existing transaction is still running. " +
                      "Please commit or rollback the existing transaction before starting a new one.");
             }
@@ -49,7 +50,7 @@ namespace MMG.Core.OAPersistence
         public void RollBackTransaction()
         {
             if (_transaction == null)
-                throw new ApplicationException("Cannot roll back a transaction while there is no transaction running.");
+                throw new PersistenceException("Cannot roll back a transaction while there is no transaction running.");
 
             if (!IsInTransaction) return;
 
@@ -65,7 +66,7 @@ namespace MMG.Core.OAPersistence
         public void CommitTransaction(bool pIgnoreErrors)
         {
             if (!IsInTransaction)
-                throw new ApplicationException("Can not commit changes while there is no transaction running.");
+                throw new PersistenceException("Can not commit changes while there is no transaction running.");
 
             try
             {
@@ -87,7 +88,7 @@ namespace MMG.Core.OAPersistence
         {
             if (IsInTransaction)
             {
-                throw new ApplicationException("A transaction is running. Call CommitTransaction instead.");
+                throw new PersistenceException("A transaction is running. Call CommitTransaction instead.");
             }
 
             try

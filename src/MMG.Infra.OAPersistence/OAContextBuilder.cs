@@ -15,7 +15,7 @@ using Telerik.OpenAccess.Metadata.Fluent;
 namespace MMG.Core.OAPersistence
 {
     public class OAContextBuilder<TContext> : IDbContextBuilder<TContext>
-    where TContext : OpenAccessContext, IDbContext
+    where TContext : OADbContext, IDbContext
     {
         private readonly DynamicMetadataSource _metadataSource;
         private readonly string _connectionStringName;
@@ -24,6 +24,12 @@ namespace MMG.Core.OAPersistence
 
         public OAContextBuilder(string pConnectionStringName, OAContextConfiguration pContextConfig)
         {
+            if (string.IsNullOrEmpty(pConnectionStringName))
+                throw new ArgumentNullException("pConnectionStringName");
+
+            if (string.IsNullOrEmpty(pContextConfig.BackendConfig))
+                throw new ArgumentException("The property 'BackendConfig' must be specified.", "pContextConfig");
+
             _connectionStringName = pConnectionStringName;
             _updateDatabaseSchema = pContextConfig.UpdateDatabaseSchema;
             _backendConfig = pContextConfig.BackendConfig;
@@ -33,7 +39,7 @@ namespace MMG.Core.OAPersistence
         public TContext BuildDbContext()
         {
             var backendConfig = new BackendConfiguration { Backend = _backendConfig };
-            var dbContext = (TContext)new OpenAccessContext(_connectionStringName, backendConfig, _metadataSource);
+            var dbContext = (TContext) new OADbContext(_connectionStringName, backendConfig, _metadataSource);
             if (_updateDatabaseSchema)
                 updateSchema(dbContext.GetSchemaHandler());
 
