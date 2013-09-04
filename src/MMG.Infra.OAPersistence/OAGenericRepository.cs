@@ -18,7 +18,7 @@ namespace MMG.Core.OAPersistence
     /// <summary>
     /// Generic repository
     /// </summary>
-    public class OAGenericRepository : IRepository
+    public class OAGenericRepository : IRepository, IDisposable
     {
         private readonly string _connectionStringName;
         private OpenAccessContext _context;
@@ -255,6 +255,21 @@ namespace MMG.Core.OAPersistence
                 }
                 return this._context;
             }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool pDisposing)
+        {
+            if (!pDisposing) return;
+            if (_context == null) return;
+
+            _context.Dispose();
+            _context = null;
         }
     }
 }

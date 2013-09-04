@@ -18,7 +18,7 @@ using System.Linq;
 namespace MMG.Infra.EFPersistence
 {
     public class EFContextBuilder<TContext> : DbModelBuilder, IDbContextBuilder<TContext>
-        where TContext : DbContext, IDbContext
+        where TContext : EFDbContext, IDbContext
     {
         private readonly DbProviderFactory _factory;
         private readonly ConnectionStringSettings _cnStringSettings;
@@ -32,7 +32,8 @@ namespace MMG.Infra.EFPersistence
             _recreateDatabaseIfExists = pContextConfig.RecreateDatabaseIfExists;
             _lazyLoadingEnabled = pContextConfig.LazyLoadingEnabled;
 
-            addConfigurations(pContextConfig.MappingAssemblies);
+            if (pContextConfig.MappingAssemblies.Count > 0)
+                addConfigurations(pContextConfig.MappingAssemblies);
         }
 
         /// <summary>
@@ -59,7 +60,7 @@ namespace MMG.Infra.EFPersistence
                 ctx.CreateDatabase();
             }
 
-            return (TContext) new DbContext(ctx, true);
+            return (TContext) new EFDbContext(ctx, true);
         }
 
         /// <summary>
@@ -107,9 +108,10 @@ namespace MMG.Infra.EFPersistence
         private static bool isMappingClass(Type pMappingType)
         {
             var baseType = typeof (EntityTypeConfiguration<>);
+            var complexConfigType = typeof (ComplexTypeConfiguration<>);
             
             if (pMappingType.IsGenericType
-                 && pMappingType.GetGenericTypeDefinition() == baseType)
+                 && (pMappingType.GetGenericTypeDefinition() == baseType || pMappingType.GetGenericTypeDefinition() == complexConfigType))
                 return true;
 
             if ((pMappingType.BaseType != null) &&
