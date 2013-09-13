@@ -19,11 +19,26 @@ namespace MMG.Core.Query
         protected readonly Specification<TEntity> _leftSide;
         protected readonly Specification<TEntity> _rightSide;
 
+        #region Constructors
+
         public CompositeSpecification(Specification<TEntity> pLeftSide, Specification<TEntity> pRightSide)
         {
             _leftSide = pLeftSide;
             _rightSide = pRightSide;
         }
+
+        public CompositeSpecification(Expression<Func<TEntity, bool>> pLeftSide, Specification<TEntity> pRightSide)
+            : this(new Specification<TEntity>(pLeftSide), pRightSide) {}
+
+        public CompositeSpecification(Specification<TEntity> pLeftSide, Expression<Func<TEntity, bool>> pRightSide)
+            : this(pLeftSide, new Specification<TEntity>(pRightSide)) {}
+
+        public CompositeSpecification(Expression<Func<TEntity, bool>> pLeftSide, Expression<Func<TEntity, bool>> pRightSide)
+            : this(pLeftSide, new Specification<TEntity>(pRightSide)) {}
+
+        #endregion
+
+
 
         public abstract Expression<Func<TEntity, bool>> Predicate { get; }
 
