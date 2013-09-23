@@ -12,8 +12,19 @@ namespace MMG.Core.Query
 {
     public class OrSpecification<TEntity> : CompositeSpecification<TEntity>
     {
+        #region Constructors
+
         public OrSpecification(Specification<TEntity> pLeftSide, Specification<TEntity> pRightSide)
             : base(pLeftSide, pRightSide) {}
+
+        public OrSpecification(Expression<Func<TEntity, bool>> pLeftSide, Specification<TEntity> pRightSide) : base(pLeftSide, pRightSide) {}
+
+        public OrSpecification(Specification<TEntity> pLeftSide, Expression<Func<TEntity, bool>> pRightSide) : base(pLeftSide, pRightSide) {}
+
+        public OrSpecification(Expression<Func<TEntity, bool>> pLeftSide, Expression<Func<TEntity, bool>> pRightSide) : base(pLeftSide, pRightSide) {}
+
+        #endregion
+
 
         public override Expression<Func<TEntity, bool>> Predicate
         {
