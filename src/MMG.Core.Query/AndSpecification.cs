@@ -12,8 +12,19 @@ namespace MMG.Core.Query
 {
     public class AndSpecification<TEntity> : CompositeSpecification<TEntity>
     {
+        #region Constructors
+
         public AndSpecification(Specification<TEntity> pLeftSide, Specification<TEntity> pRightSide)
             : base(pLeftSide, pRightSide) {}
+
+        public AndSpecification(Expression<Func<TEntity, bool>> pLeftSide, Specification<TEntity> pRightSide) : base(pLeftSide, pRightSide) {}
+
+        public AndSpecification(Specification<TEntity> pLeftSide, Expression<Func<TEntity, bool>> pRightSide) : base(pLeftSide, pRightSide) {}
+
+        public AndSpecification(Expression<Func<TEntity, bool>> pLeftSide, Expression<Func<TEntity, bool>> pRightSide) : base(pLeftSide, pRightSide) {}
+
+        #endregion
+
 
         public override Expression<Func<TEntity, bool>> Predicate
         {
