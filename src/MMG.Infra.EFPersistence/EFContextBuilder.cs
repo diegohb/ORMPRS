@@ -11,9 +11,11 @@ using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration;
 using System.Data.Objects;
+using System.IO;
 using System.Reflection;
 using MMG.Core.Persistence;
 using System.Linq;
+using MMG.Core.Persistence.Exceptions;
 
 namespace MMG.Infra.EFPersistence
 {
@@ -77,7 +79,26 @@ namespace MMG.Infra.EFPersistence
             var hasMappingClass = false;
             foreach (var mappingAssembly in pMappingAssemblies)
             {
-                var asm = Assembly.LoadFrom(makeLoadReadyAssemblyName(mappingAssembly));
+
+                Assembly asm;
+                
+                try
+                {
+                    asm = AppDomain.CurrentDomain.Load(mappingAssembly);
+                }
+                catch (Exception)
+                {
+                    try
+                    {
+                        asm = Assembly.LoadFrom(makeLoadReadyAssemblyName(mappingAssembly));
+                    }
+                    catch (Exception e)
+                    {
+                        throw new PersistenceException
+                            ("Unable to find mapping assembly '{0}'. You must provide an assembly display name or a full path to a dll.", e);
+                    }
+                }
+                
 
                 foreach (var type in asm.GetTypes())
                 {
@@ -131,9 +152,9 @@ namespace MMG.Infra.EFPersistence
         /// <returns></returns>
         private static string makeLoadReadyAssemblyName(string pAssemblyName)
         {
-            return (!pAssemblyName.EndsWith(".dll"))
-                       ? pAssemblyName.Trim() + ".dll"
-                       : pAssemblyName.Trim();
+            var rootPath = !Path.IsPathRooted(pAssemblyName) ? AppDomain.CurrentDomain.RelativeSearchPath : string.Empty;
+            var assemblyNameWithExtension = !pAssemblyName.EndsWith(".dll") ? pAssemblyName.Trim() + ".dll" : pAssemblyName.Trim();
+            return Path.Combine(rootPath, assemblyNameWithExtension);
         }
     }
 }
