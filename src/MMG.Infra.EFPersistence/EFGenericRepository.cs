@@ -62,19 +62,32 @@ namespace MMG.Infra.EFPersistence
             _context = new DbContext(context, true);
         }
 
-        public TEntity GetByKey<TEntity>(object keyValue) where TEntity : class
+        public TEntity GetByKey<TEntity>(object keyValue, params string[] pExpandPropertyNames) 
+            where TEntity : class
         {
             EntityKey key = getEntityKey<TEntity>(keyValue);
 
             object originalItem;
             if (((IObjectContextAdapter)DbContext).ObjectContext.TryGetObjectByKey(key, out originalItem))
             {
-                return (TEntity)originalItem;
+                var entity = (TEntity) originalItem;
+                //this will eager-load related entities.
+                foreach (var expandPropertyName in pExpandPropertyNames)
+                {
+                    var expandProp = typeof (TEntity).GetProperty(expandPropertyName);
+                    var isGeneric = expandProp.PropertyType.IsGenericType;
+                    if (!isGeneric) //indicates its a list
+                        DbContext.Entry(entity).Reference(expandPropertyName).Load();
+                    else
+                        DbContext.Entry(entity).Collection(expandPropertyName).Load();
+                }
+
+                return entity;
             }
             return default(TEntity);
         }
 
-        public IQueryable<TEntity> GetQuery<TEntity>() where TEntity : class
+        public IQueryable<TEntity> GetQuery<TEntity>(params Expression<Func<TEntity, object>>[] pExpandPropertySelectors) where TEntity : class
         {
             /* 
              * From CTP4, I could always safely call this to return an IQueryable on DbContext 
@@ -92,17 +105,23 @@ namespace MMG.Infra.EFPersistence
             // - call CreateQuery<TEntity>(entityName) method on the ObjectContext
             // - perform querying on the returning IQueryable, and it works!
             var entityName = getEntityName<TEntity>();
-            return ((IObjectContextAdapter)DbContext).ObjectContext.CreateQuery<TEntity>(entityName);
+            var objectQuery = ((IObjectContextAdapter) DbContext).ObjectContext.CreateQuery<TEntity>(entityName);
+            if (pExpandPropertySelectors != null)
+            {
+                objectQuery = pExpandPropertySelectors.Aggregate
+                    (objectQuery, (pCurrent, pInclude) => pCurrent.Include(pInclude) as ObjectQuery<TEntity>);
+            }
+            return objectQuery;
         }
 
-        public IQueryable<TEntity> GetQuery<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class
+        public IQueryable<TEntity> GetQuery<TEntity>(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] pExpandPropertySelectors) where TEntity : class
         {
-            return GetQuery<TEntity>().Where(predicate);
+            return GetQuery(pExpandPropertySelectors).Where(predicate);
         }
 
-        public IQueryable<TEntity> GetQuery<TEntity>(ISpecification<TEntity> criteria) where TEntity : class
+        public IQueryable<TEntity> GetQuery<TEntity>(ISpecification<TEntity> criteria, params Expression<Func<TEntity, object>>[] pExpandPropertySelectors) where TEntity : class
         {
-            return criteria.SatisfyingEntitiesFrom(GetQuery<TEntity>());
+            return criteria.SatisfyingEntitiesFrom(GetQuery(pExpandPropertySelectors));
         }
 
         public IEnumerable<TEntity> Get<TEntity, TOrderBy>(Expression<Func<TEntity, TOrderBy>> orderBy, int pageIndex, int pageSize, SortOrder sortOrder = SortOrder.Ascending) where TEntity : class
