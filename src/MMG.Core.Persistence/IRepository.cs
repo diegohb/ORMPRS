@@ -19,31 +19,35 @@ namespace MMG.Core.Persistence
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="keyValue">The key value.</param>
+        /// <param name="pExpandPropertyNames">Names of the properties to expand.</param>
         /// <returns></returns>
-        TEntity GetByKey<TEntity>(object keyValue) where TEntity : class;
+        TEntity GetByKey<TEntity>(object keyValue, params string[] pExpandPropertyNames) where TEntity : class;
 
         /// <summary>
         /// Gets the query.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// /// <param name="pExpandPropertySelectors">Names of the properties to expand.</param>
         /// <returns></returns>
-        IQueryable<TEntity> GetQuery<TEntity>() where TEntity : class;
+        IQueryable<TEntity> GetQuery<TEntity>(params Expression<Func<TEntity, object>>[] pExpandPropertySelectors) where TEntity : class;
 
         /// <summary>
         /// Gets the query.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="predicate">The predicate.</param>
+        /// <param name="pExpandPropertySelectors">Names of the properties to expand.</param>
         /// <returns></returns>
-        IQueryable<TEntity> GetQuery<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class;
+        IQueryable<TEntity> GetQuery<TEntity>(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] pExpandPropertySelectors) where TEntity : class;
 
         /// <summary>
         /// Gets the query.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="criteria">The criteria.</param>
+        /// <param name="pExpandPropertySelectors">Names of the properties to expand.</param>
         /// <returns></returns>
-        IQueryable<TEntity> GetQuery<TEntity>(ISpecification<TEntity> criteria) where TEntity : class;
+        IQueryable<TEntity> GetQuery<TEntity>(ISpecification<TEntity> criteria, params Expression<Func<TEntity, object>>[] pExpandPropertySelectors) where TEntity : class;
 
         /// <summary>
         /// Gets one entity based on matching criteria
