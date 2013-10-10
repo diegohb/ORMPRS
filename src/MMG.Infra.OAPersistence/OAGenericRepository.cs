@@ -52,29 +52,51 @@ namespace MMG.Core.OAPersistence
             _context = context;
         }
 
-        public TEntity GetByKey<TEntity>(object keyValue) where TEntity : class
+        public TEntity GetByKey<TEntity>(object keyValue, params string[] pExpandPropertyNames) where TEntity : class
         {
             var key = getEntityKey<TEntity>(keyValue);
 
             TEntity foundEntity;
-            return DbContext.TryGetObjectByKey(key, out foundEntity)
-                       ? foundEntity
-                       : default(TEntity);
+            if (DbContext.TryGetObjectByKey(key, out foundEntity))
+            {
+                if (pExpandPropertyNames.Length > 0)
+                    throw new NotImplementedException("Expanding properties for this method has no yet been implemented!");
+                
+                /*//this will eager-load related entities for EF.
+                foreach (var expandPropertyName in pExpandPropertyNames)
+                {
+                    var expandProp = typeof(TEntity).GetProperty(expandPropertyName);
+                    var isGeneric = expandProp.PropertyType.IsGenericType;
+                    if (!isGeneric) //indicates its a list
+                        DbContext.Entry(entity).Reference(expandPropertyName).Load();
+                    else
+                        DbContext.Entry(entity).Collection(expandPropertyName).Load();
+                }*/
+
+                return foundEntity;
+            }
+            else return default(TEntity);
         }
 
-        public IQueryable<TEntity> GetQuery<TEntity>() where TEntity : class
+        public IQueryable<TEntity> GetQuery<TEntity>(params Expression<Func<TEntity, object>>[] pExpandPropertySelectors) where TEntity : class
         {
-            return DbContext.GetAll<TEntity>();
+            var query = DbContext.GetAll<TEntity>();
+            if (pExpandPropertySelectors != null)
+            {
+                query = pExpandPropertySelectors.Aggregate
+                    (query, (pCurrent, pInclude) => pCurrent.Include(pInclude));
+            }
+            return query;
         }
 
-        public IQueryable<TEntity> GetQuery<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class
+        public IQueryable<TEntity> GetQuery<TEntity>(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] pExpandPropertySelectors) where TEntity : class
         {
-            return GetQuery<TEntity>().Where(predicate);
+            return GetQuery(pExpandPropertySelectors).Where(predicate);
         }
 
-        public IQueryable<TEntity> GetQuery<TEntity>(ISpecification<TEntity> criteria) where TEntity : class
+        public IQueryable<TEntity> GetQuery<TEntity>(ISpecification<TEntity> criteria, params Expression<Func<TEntity, object>>[] pExpandPropertySelectors) where TEntity : class
         {
-            return criteria.SatisfyingEntitiesFrom(GetQuery<TEntity>());
+            return criteria.SatisfyingEntitiesFrom(GetQuery(pExpandPropertySelectors));
         }
 
         public IEnumerable<TEntity> Get<TEntity, TOrderBy>(Expression<Func<TEntity, TOrderBy>> orderBy, int pageIndex, int pageSize, SortOrder sortOrder = SortOrder.Ascending) where TEntity : class
