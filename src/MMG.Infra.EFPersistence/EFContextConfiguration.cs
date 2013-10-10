@@ -15,6 +15,9 @@ namespace MMG.Infra.EFPersistence
         public EFContextConfiguration()
         {
             MappingAssemblies = new List<string>();
+            LazyLoadingEnabled = false;
+            ProxyCreationEnabled = false;
+            UseLegacyPreserveChangesBehavior = false;
         }
 
         public EFContextConfiguration(IEnumerable<string> pMappingAssemblies)
@@ -33,5 +36,15 @@ namespace MMG.Infra.EFPersistence
         /// if set to <c>true</c> [lazy loading enabled].
         /// </summary>
         public bool LazyLoadingEnabled { get; set; }
+
+        /// <summary>
+        /// if set to <c>true</c> then proxy objects will be created by EF.
+        /// </summary>
+        public bool ProxyCreationEnabled { get; set; }
+
+        /// <summary>
+        /// if set to <c>true</c> then legacy behavior will be used for changes.
+        /// </summary>
+        public bool UseLegacyPreserveChangesBehavior { get; set; }
     }
 }
