@@ -22,20 +22,20 @@ namespace MMG.Infra.EFPersistence
     public class EFContextBuilder<TContext> : DbModelBuilder, IDbContextBuilder<TContext>
         where TContext : EFDbContext, IDbContext
     {
+        private readonly EFContextConfiguration _contextConfig;
         private readonly DbProviderFactory _factory;
         private readonly ConnectionStringSettings _cnStringSettings;
-        private readonly bool _recreateDatabaseIfExists;
-        private readonly bool _lazyLoadingEnabled;
+        
 
         public EFContextBuilder(string pConnectionStringName, EFContextConfiguration pContextConfig)
         {
+            _contextConfig = pContextConfig;
             _cnStringSettings = ConfigurationManager.ConnectionStrings[pConnectionStringName];
             _factory = DbProviderFactories.GetFactory(_cnStringSettings.ProviderName);
-            _recreateDatabaseIfExists = pContextConfig.RecreateDatabaseIfExists;
-            _lazyLoadingEnabled = pContextConfig.LazyLoadingEnabled;
+            _contextConfig = pContextConfig;
 
-            if (pContextConfig.MappingAssemblies.Count > 0)
-                addConfigurations(pContextConfig.MappingAssemblies);
+            if (_contextConfig.MappingAssemblies.Count > 0)
+                addConfigurations(_contextConfig.MappingAssemblies);
         }
 
         /// <summary>
@@ -50,13 +50,15 @@ namespace MMG.Infra.EFPersistence
             var dbModel = base.Build(cn);
 
             var ctx = dbModel.Compile().CreateObjectContext<ObjectContext>(cn);
-            ctx.ContextOptions.LazyLoadingEnabled = _lazyLoadingEnabled;
+            ctx.ContextOptions.LazyLoadingEnabled = _contextConfig.LazyLoadingEnabled;
+            ctx.ContextOptions.ProxyCreationEnabled = _contextConfig.ProxyCreationEnabled;
+            ctx.ContextOptions.UseLegacyPreserveChangesBehavior = _contextConfig.UseLegacyPreserveChangesBehavior;
 
             if (!ctx.DatabaseExists())
             {
                 ctx.CreateDatabase();
             }
-            else if (_recreateDatabaseIfExists)
+            else if (_contextConfig.RecreateDatabaseIfExists)
             {
                 ctx.DeleteDatabase();
                 ctx.CreateDatabase();
