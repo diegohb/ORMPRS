@@ -30,7 +30,7 @@ namespace MMG.Core.Query
 
         public void AddFilter(Expression<Func<TEntity, bool>> pQueryExpression)
         {
-            if (IsValid())
+            if (!IsValid())
                 Predicate = pQueryExpression;
             else
                 Predicate = _aggregateType == AggregateTypeEnum.And
@@ -40,7 +40,7 @@ namespace MMG.Core.Query
 
         public bool IsValid()
         {
-            return Predicate == null;
+            return Predicate != null;
         }
     }
 }
