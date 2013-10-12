@@ -38,8 +38,10 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AggregateTypeEnum.cs" />
     <Compile Include="AndSpecification.cs" />
     <Compile Include="CompositeSpecification.cs" />
+    <Compile Include="AggregateSpecification.cs" />
     <Compile Include="Extensions\ExpressionExtensions.cs" />
     <Compile Include="Extensions\QueryableTExtensions.cs" />
     <Compile Include="ISpecification.cs" />
