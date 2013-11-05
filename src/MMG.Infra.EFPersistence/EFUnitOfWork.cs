@@ -70,6 +70,13 @@ namespace MMG.Infra.EFPersistence
                 _transaction.Commit();
                 releaseCurrentTransaction();
             }
+            catch (UpdateException updateException)
+            {
+                RollBackTransaction();
+                throw new PersistenceException
+                    ("An error has occurred while trying to commit your changes: " + updateException.InnerException.Message,
+                        updateException.InnerException);
+            }
             catch
             {
                 RollBackTransaction();
