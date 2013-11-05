@@ -1,6 +1,6 @@
 ﻿// *************************************************
 // MMG.Infra.EFPersistence.EFUnitOfWork.cs
-// Last Modified: 08/29/2013 5:02 PM
+// Last Modified: 11/05/2013 6:45 PM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
@@ -45,7 +45,7 @@ namespace MMG.Infra.EFPersistence
                      "Please commit or rollback the existing transaction before starting a new one.");
             }
             openConnection();
-            _transaction = ((IObjectContextAdapter)_dbContext).ObjectContext.Connection.BeginTransaction(pIsolationLevel);
+            _transaction = ((IObjectContextAdapter) _dbContext).ObjectContext.Connection.BeginTransaction(pIsolationLevel);
         }
 
         public void RollBackTransaction()
@@ -66,16 +66,14 @@ namespace MMG.Infra.EFPersistence
 
             try
             {
-                ((IObjectContextAdapter)_dbContext).ObjectContext.SaveChanges();
+                ((IObjectContextAdapter) _dbContext).ObjectContext.SaveChanges();
                 _transaction.Commit();
                 releaseCurrentTransaction();
             }
             catch (UpdateException updateException)
             {
                 RollBackTransaction();
-                throw new PersistenceException
-                    ("An error has occurred while trying to commit your changes: " + updateException.InnerException.Message,
-                        updateException.InnerException);
+                throw wrapDataException(updateException);
             }
             catch
             {
@@ -93,13 +91,11 @@ namespace MMG.Infra.EFPersistence
 
             try
             {
-                ((IObjectContextAdapter)_dbContext).ObjectContext.SaveChanges();
+                ((IObjectContextAdapter) _dbContext).ObjectContext.SaveChanges();
             }
             catch (UpdateException updateException)
             {
-                throw new PersistenceException
-                    ("An error has occurred while trying to commit your changes: " + updateException.InnerException.Message,
-                        updateException.InnerException);
+                throw wrapDataException(updateException);
             }
         }
 
@@ -112,13 +108,11 @@ namespace MMG.Infra.EFPersistence
 
             try
             {
-                ((IObjectContextAdapter)_dbContext).ObjectContext.SaveChanges(pSaveOptions);
+                ((IObjectContextAdapter) _dbContext).ObjectContext.SaveChanges(pSaveOptions);
             }
             catch (UpdateException updateException)
             {
-                throw new PersistenceException
-                    ("An error has occurred while trying to commit your changes: " + updateException.InnerException.Message,
-                        updateException.InnerException);
+                throw wrapDataException(updateException);
             }
         }
 
@@ -152,9 +146,9 @@ namespace MMG.Infra.EFPersistence
 
         private void openConnection()
         {
-            if (((IObjectContextAdapter)_dbContext).ObjectContext.Connection.State != ConnectionState.Open)
+            if (((IObjectContextAdapter) _dbContext).ObjectContext.Connection.State != ConnectionState.Open)
             {
-                ((IObjectContextAdapter)_dbContext).ObjectContext.Connection.Open();
+                ((IObjectContextAdapter) _dbContext).ObjectContext.Connection.Open();
             }
         }
 
@@ -168,6 +162,16 @@ namespace MMG.Infra.EFPersistence
                 _transaction.Dispose();
                 _transaction = null;
             }
+        }
+
+        private static PersistenceException wrapDataException(UpdateException pUpdateException)
+        {
+            var msgDetails = pUpdateException.InnerException != null
+                ? pUpdateException.InnerException.Message
+                : pUpdateException.Message;
+            return new PersistenceException
+                (string.Format("An error has occurred while trying to commit your changes: {0}.", msgDetails),
+                    pUpdateException.InnerException ?? pUpdateException);
         }
     }
 }
