@@ -45,7 +45,7 @@ namespace MMG.Infra.EFPersistence
                      "Please commit or rollback the existing transaction before starting a new one.");
             }
             openConnection();
-            _transaction = ((IObjectContextAdapter) _dbContext).ObjectContext.Connection.BeginTransaction(pIsolationLevel);
+            _transaction = ((IObjectContextAdapter)_dbContext).ObjectContext.Connection.BeginTransaction(pIsolationLevel);
         }
 
         public void RollBackTransaction()
@@ -66,7 +66,7 @@ namespace MMG.Infra.EFPersistence
 
             try
             {
-                ((IObjectContextAdapter) _dbContext).ObjectContext.SaveChanges();
+                ((IObjectContextAdapter)_dbContext).ObjectContext.SaveChanges();
                 _transaction.Commit();
                 releaseCurrentTransaction();
             }
@@ -83,7 +83,17 @@ namespace MMG.Infra.EFPersistence
             {
                 throw new PersistenceException("A transaction is running. Call CommitTransaction instead.");
             }
-            ((IObjectContextAdapter) _dbContext).ObjectContext.SaveChanges();
+
+            try
+            {
+                ((IObjectContextAdapter)_dbContext).ObjectContext.SaveChanges();
+            }
+            catch (UpdateException updateException)
+            {
+                throw new PersistenceException
+                    ("An error has occurred while trying to commit your changes: " + updateException.InnerException.Message,
+                        updateException.InnerException);
+            }
         }
 
         public void SaveChanges(SaveOptions pSaveOptions)
@@ -93,7 +103,16 @@ namespace MMG.Infra.EFPersistence
                 throw new PersistenceException("A transaction is running. Call CommitTransaction instead.");
             }
 
-            ((IObjectContextAdapter) _dbContext).ObjectContext.SaveChanges(pSaveOptions);
+            try
+            {
+                ((IObjectContextAdapter)_dbContext).ObjectContext.SaveChanges(pSaveOptions);
+            }
+            catch (UpdateException updateException)
+            {
+                throw new PersistenceException
+                    ("An error has occurred while trying to commit your changes: " + updateException.InnerException.Message,
+                        updateException.InnerException);
+            }
         }
 
         #region Implementation of IDisposable
@@ -126,9 +145,9 @@ namespace MMG.Infra.EFPersistence
 
         private void openConnection()
         {
-            if (((IObjectContextAdapter) _dbContext).ObjectContext.Connection.State != ConnectionState.Open)
+            if (((IObjectContextAdapter)_dbContext).ObjectContext.Connection.State != ConnectionState.Open)
             {
-                ((IObjectContextAdapter) _dbContext).ObjectContext.Connection.Open();
+                ((IObjectContextAdapter)_dbContext).ObjectContext.Connection.Open();
             }
         }
 
