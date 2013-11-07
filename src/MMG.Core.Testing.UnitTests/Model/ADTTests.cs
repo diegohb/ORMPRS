@@ -4,10 +4,18 @@
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
+using NUnit.Framework;
+
 namespace MMG.Core.Testing.UnitTests.Model
 {
+    [TestFixture]
     public class ADTTests
     {
+        [Test]
+        public void ADTConverter_ShouldConvertToUnderlyingType()
+        {
+            
+        }
         
     }
 }
