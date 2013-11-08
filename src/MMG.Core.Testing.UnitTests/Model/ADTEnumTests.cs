@@ -149,7 +149,7 @@ namespace MMG.Core.Testing.UnitTests.Model
         }
 
         [Test]
-        public void ShouldConvertFromUnderlyingType()
+        public void ShouldConvertFromUnderlyingTypeString()
         {
             const string underlyingValue = "Choice 3";
             EnumADT actualValue = underlyingValue;
@@ -157,9 +157,20 @@ namespace MMG.Core.Testing.UnitTests.Model
             Assert.IsInstanceOf<string>(underlyingValue);
             Assert.IsAssignableFrom<EnumADT>(actualValueFromBase);
             var expectedValue = new EnumADT(underlyingValue);
-            Assert.AreEqual(expectedValue.Value, actualValue.Value);
             Assert.True(expectedValue.Equals(actualValue));
             Assert.True(expectedValue.Equals(actualValueFromBase));
+            Assert.True(MyEnum.Choice3 == actualValue);
+        }
+
+        [Test]
+        public void ShouldConvertFromUnderlyingTypeEnum()
+        {
+            const MyEnum underlyingValue = MyEnum.Choice3;
+            EnumADT actualValue = underlyingValue;
+            Assert.IsInstanceOf<MyEnum>(underlyingValue);
+            var expectedValue = new EnumADT(underlyingValue);
+            Assert.True(expectedValue.Equals(actualValue));
+            Assert.True(MyEnum.Choice3 == actualValue);
         }
 
         [Test]
@@ -168,6 +179,7 @@ namespace MMG.Core.Testing.UnitTests.Model
             const string expectedValue = "Choice 3";
             var adt = new EnumADT(expectedValue);
             Assert.AreEqual(expectedValue, adt);
+            Assert.True(MyEnum.Choice3 == adt);
         }
     }
 }
