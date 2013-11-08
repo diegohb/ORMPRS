@@ -75,11 +75,24 @@ namespace MMG.Core.Testing.UnitTests.Model
         }
 
         [Test]
-        public void ShouldCreateToProperTypeFromString()
+        public void ShouldCreateToProperTypeFromDescriptionString()
         {
             const string expectedValueString = "Choice 1";
             const MyEnum expectedValueEnum = MyEnum.Choice1;
             var adt = new EnumADT(expectedValueString);
+            Assert.IsInstanceOf<string>(adt.Value);
+            Assert.IsInstanceOf<MyEnum>(adt.EnumValue);
+            Assert.AreEqual(expectedValueString, adt.Value);
+            Assert.AreEqual(expectedValueEnum, adt.EnumValue);
+        }
+
+        [Test]
+        public void ShouldCreateToProperTypeFromMemberNameString()
+        {
+            const string memberName = "Choice1";
+            const string expectedValueString = "Choice 1";
+            const MyEnum expectedValueEnum = MyEnum.Choice1;
+            var adt = new EnumADT(memberName);
             Assert.IsInstanceOf<string>(adt.Value);
             Assert.IsInstanceOf<MyEnum>(adt.EnumValue);
             Assert.AreEqual(expectedValueString, adt.Value);
