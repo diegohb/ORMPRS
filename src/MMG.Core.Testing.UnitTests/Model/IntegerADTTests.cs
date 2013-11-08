@@ -1,0 +1,56 @@
+﻿// *************************************************
+// MMG.Core.Testing.UnitTests.IntegerADTTests.cs
+// Last Modified: 11/08/2013 10:02 AM
+// Modified By: Bustamante, Diego (bustamd1)
+// *************************************************
+
+using System;
+using MMG.Core.Model;
+using NUnit.Framework;
+
+namespace MMG.Core.Testing.UnitTests.Model
+{
+    /// <summary>
+    /// Tests for adt types.
+    /// </summary>
+    /// <remarks>See more:
+    /// http://msdn.microsoft.com/en-us/library/system.componentmodel.typeconverter(v=vs.110).aspx
+    /// http://msdn.microsoft.com/en-us/library/98bbex99(v=vs.100).aspx
+    /// </remarks>
+    [TestFixture]
+    public class IntegerADTTests
+    {
+        private class IntegerADT : ADTBase<int>
+        {
+            public IntegerADT(int pValue) : base(pValue) {}
+
+            public override int Value { get; set; }
+        }
+
+        [Test]
+        public void ShouldCreateToProperType()
+        {
+            const int expectedValue = 5;
+            var adt = new IntegerADT(expectedValue);
+            Assert.IsInstanceOf<int>(adt.Value);
+            Assert.AreEqual(expectedValue, adt.Value);
+        }
+
+        [Test]
+        public void ShouldConvertToUnderlyingType()
+        {
+            const int expectedValue = 5;
+            var adt = new IntegerADT(expectedValue);
+            var actualValue = Convert.ToInt32((int) adt);
+            Assert.AreEqual(expectedValue, actualValue);
+        }
+
+        [Test]
+        public void ShouldConvertImplicitlyToUnderlyingType()
+        {
+            const int expectedValue = 5;
+            var adt = new IntegerADT(expectedValue);
+            Assert.AreEqual(expectedValue, adt);
+        }
+    }
+}

@@ -17,8 +17,7 @@ namespace MMG.Core.Model
     /// http://programmers.stackexchange.com/questions/148747/abstract-data-type-and-data-structure or
     /// http://en.wikipedia.org/wiki/Abstract_data_type
     /// </remarks>
-    public abstract class ADTBase<TUnderlyingType> : IConvertible, IComparable<TUnderlyingType>
-        where TUnderlyingType : struct
+    public abstract class ADTBase<TUnderlyingType> : IConvertible
     {
         public ADTBase() {}
 
@@ -29,19 +28,14 @@ namespace MMG.Core.Model
 
         public abstract TUnderlyingType Value { get; set; }
 
-        public static implicit operator string(ADTBase<TUnderlyingType> pAbtractDataTypeObject)
+        public static implicit operator TUnderlyingType(ADTBase<TUnderlyingType> pAbtractDataTypeObject)
         {
-            return pAbtractDataTypeObject.ToString();
+            return pAbtractDataTypeObject.Value;
         }
-
-        public virtual int CompareTo(TUnderlyingType pOther)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public override string ToString()
         {
-            return ToString(CultureInfo.InvariantCulture);
+            return Convert.ToString(this);
         }
 
         #region IConvertible
@@ -123,12 +117,12 @@ namespace MMG.Core.Model
 
         public virtual string ToString(IFormatProvider provider)
         {
-            return Value.ToString();
+            return string.Format(provider, "{0}", Value);
         }
 
-        public virtual object ToType(Type conversionType, IFormatProvider provider)
+        public virtual object ToType(Type pConversionType, IFormatProvider pProvider)
         {
-            throw new NotImplementedException();
+            return Convert.ChangeType(Value, pConversionType);
         }
 
         #endregion

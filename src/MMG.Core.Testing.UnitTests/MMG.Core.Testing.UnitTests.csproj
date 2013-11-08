@@ -42,7 +42,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\ADTTests.cs" />
+    <Compile Include="Model\IntegerADTTests.cs" />
+    <Compile Include="Model\StringADTTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
