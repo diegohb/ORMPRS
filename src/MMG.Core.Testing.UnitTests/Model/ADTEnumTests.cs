@@ -112,9 +112,23 @@ namespace MMG.Core.Testing.UnitTests.Model
         }
 
         [Test]
-        public void SetValueStringShouldChangeEnumValue()
+        public void SetValueDescriptionStringShouldChangeEnumValue()
         {
             const string changeValueString = "Choice 2";
+            const MyEnum expectedChangedValueEnum = MyEnum.Choice2;
+            const MyEnum expectedInitialValueEnum = MyEnum.Choice1;
+            var adt = new EnumADT(expectedInitialValueEnum);
+            Assert.AreEqual(expectedInitialValueEnum, adt.EnumValue);
+            adt.Value = changeValueString;
+            Assert.AreEqual
+                (expectedChangedValueEnum, adt.EnumValue,
+                    "If Value is overriden at derived type, you shoudl call into setStringValue or implement setting _enumValue yourself.");
+        }
+
+        [Test]
+        public void SetValueMemberNameStringShouldChangeEnumValue()
+        {
+            const string changeValueString = "Choice2";
             const MyEnum expectedChangedValueEnum = MyEnum.Choice2;
             const MyEnum expectedInitialValueEnum = MyEnum.Choice1;
             var adt = new EnumADT(expectedInitialValueEnum);
