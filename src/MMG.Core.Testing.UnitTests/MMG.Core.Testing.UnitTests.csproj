@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MMG.Common.Extensions35">
+      <HintPath>..\..\..\packages\MMG.Common.Extensions35.1.5.201.36\lib\net35\MMG.Common.Extensions35.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -42,6 +45,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\ADTEnumTests.cs" />
     <Compile Include="Model\ADTIntegerTests.cs" />
     <Compile Include="Model\ADTStringTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
