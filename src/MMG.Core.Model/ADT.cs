@@ -1,5 +1,5 @@
 ﻿// *************************************************
-// MMG.Core.Model.ADTBase.cs
+// MMG.Core.Model.ADT.cs
 // Last Modified: 11/07/2013 7:25 PM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
@@ -17,25 +17,35 @@ namespace MMG.Core.Model
     /// http://programmers.stackexchange.com/questions/148747/abstract-data-type-and-data-structure or
     /// http://en.wikipedia.org/wiki/Abstract_data_type
     /// </remarks>
-    public abstract class ADTBase<TUnderlyingType> : IConvertible
+    public class ADT<TUnderlyingType> : IConvertible, IEquatable<TUnderlyingType>
     {
-        public ADTBase() {}
+        protected ADT() {}
 
-        public ADTBase(TUnderlyingType pValue)
+        public ADT(TUnderlyingType pValue)
         {
             Value = pValue;
         }
 
-        public abstract TUnderlyingType Value { get; set; }
+        public virtual TUnderlyingType Value { get; set; }
 
-        public static implicit operator TUnderlyingType(ADTBase<TUnderlyingType> pAbtractDataTypeObject)
+        public static implicit operator TUnderlyingType(ADT<TUnderlyingType> pAbtractDataTypeObject)
         {
             return pAbtractDataTypeObject.Value;
         }
-        
+
+        public static implicit operator ADT<TUnderlyingType>(TUnderlyingType pValue)
+        {
+            return new ADT<TUnderlyingType>(pValue);
+        }
+
+        public bool Equals(TUnderlyingType pOther)
+        {
+            return Value.Equals(pOther);
+        }
+
         public override string ToString()
         {
-            return Convert.ToString(this);
+            return this.Value.ToString();
         }
 
         #region IConvertible

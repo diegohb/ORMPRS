@@ -1,5 +1,5 @@
 ﻿// *************************************************
-// MMG.Core.Testing.UnitTests.IntegerADTTests.cs
+// MMG.Core.Testing.UnitTests.ADTIntegerTests.cs
 // Last Modified: 11/08/2013 10:02 AM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
@@ -18,13 +18,18 @@ namespace MMG.Core.Testing.UnitTests.Model
     /// http://msdn.microsoft.com/en-us/library/98bbex99(v=vs.100).aspx
     /// </remarks>
     [TestFixture]
-    public class IntegerADTTests
+    public class ADTIntegerTests
     {
-        private class IntegerADT : ADTBase<int>
+        private class IntegerADT : ADT<int>
         {
             public IntegerADT(int pValue) : base(pValue) {}
 
             public override int Value { get; set; }
+
+            public static implicit operator IntegerADT(int pValue)
+            {
+                return new IntegerADT(pValue);
+            }
         }
 
         [Test]
@@ -41,8 +46,21 @@ namespace MMG.Core.Testing.UnitTests.Model
         {
             const int expectedValue = 5;
             var adt = new IntegerADT(expectedValue);
-            var actualValue = Convert.ToInt32((int) adt);
+            var actualValue = Convert.ToInt32(adt);
             Assert.AreEqual(expectedValue, actualValue);
+        }
+
+        [Test]
+        public void ShouldConvertFromUnderlyingType()
+        {
+            const int underlyingValue = 10;
+            ADT<int> actualValue = underlyingValue;
+            ADT<int> actualValueFromBase = underlyingValue;
+            Assert.IsInstanceOf<int>(underlyingValue);
+            Assert.IsAssignableFrom<IntegerADT>(actualValueFromBase);
+            var expectedValue = new IntegerADT(underlyingValue);
+            Assert.AreEqual(expectedValue, actualValue);
+            Assert.AreEqual(expectedValue, actualValueFromBase);
         }
 
         [Test]
