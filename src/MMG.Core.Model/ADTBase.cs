@@ -1,6 +1,6 @@
 ﻿// *************************************************
-// MMG.Core.Model.Class1.cs
-// Last Modified: 11/07/2013 2:49 PM
+// MMG.Core.Model.ADTBase.cs
+// Last Modified: 11/07/2013 7:25 PM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
@@ -15,7 +15,7 @@ namespace MMG.Core.Model
     /// http://en.wikipedia.org/wiki/Abstract_data_type
     /// </remarks>
     public abstract class ADTBase<TUnderlyingType>
-        where TUnderlyingType : class
+        where TUnderlyingType : struct
     {
         public ADTBase() {}
 
@@ -33,7 +33,7 @@ namespace MMG.Core.Model
 
         public override string ToString()
         {
-            return Value != null ? Value.ToString() : string.Empty;
+            return Value.ToString();
         }
     }
 }
