@@ -54,7 +54,7 @@ namespace MMG.Core.Testing.UnitTests.Model
         public void ShouldConvertFromUnderlyingType()
         {
             const int underlyingValue = 10;
-            ADT<int> actualValue = underlyingValue;
+            IntegerADT actualValue = underlyingValue;
             ADT<int> actualValueFromBase = underlyingValue;
             Assert.IsInstanceOf<int>(underlyingValue);
             Assert.IsAssignableFrom<IntegerADT>(actualValueFromBase);
