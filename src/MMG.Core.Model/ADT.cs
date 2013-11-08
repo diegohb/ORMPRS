@@ -1,11 +1,10 @@
 ﻿// *************************************************
 // MMG.Core.Model.ADT.cs
-// Last Modified: 11/07/2013 7:25 PM
+// Last Modified: 11/08/2013 2:56 PM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
 using System;
-using System.Globalization;
 
 namespace MMG.Core.Model
 {
@@ -45,7 +44,7 @@ namespace MMG.Core.Model
 
         public override string ToString()
         {
-            return this.Value.ToString();
+            return Value.ToString();
         }
 
         #region IConvertible
@@ -136,6 +135,5 @@ namespace MMG.Core.Model
         }
 
         #endregion
-
     }
 }
