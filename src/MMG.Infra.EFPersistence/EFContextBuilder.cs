@@ -97,7 +97,7 @@ namespace MMG.Infra.EFPersistence
                     catch (Exception e)
                     {
                         throw new PersistenceException
-                            ("Unable to find mapping assembly '{0}'. You must provide an assembly display name or a full path to a dll.", e);
+                            (string.Format("Unable to find mapping assembly '{0}'. You must provide an assembly display name or a full path to a dll.", mappingAssembly), e);
                     }
                 }
                 
