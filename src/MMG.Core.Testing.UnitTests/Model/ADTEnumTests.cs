@@ -21,7 +21,7 @@ namespace MMG.Core.Testing.UnitTests.Model
             [System.ComponentModel.Description("Choice 3")] Choice3
         }
 
-        private class EnumADT : ADTEnumBase<MyEnum>
+        private class EnumADT : ADTEnum<MyEnum>
         {
             #region Constructors
 
@@ -78,6 +78,19 @@ namespace MMG.Core.Testing.UnitTests.Model
             const string expectedValueString = "Choice 1";
             const MyEnum expectedValueEnum = MyEnum.Choice1;
             var adt = new EnumADT(expectedValueString);
+            Assert.IsInstanceOf<string>(adt.Value);
+            Assert.IsInstanceOf<MyEnum>(adt.EnumValue);
+            Assert.AreEqual(expectedValueString, adt.Value);
+            Assert.AreEqual(expectedValueEnum, adt.EnumValue);
+        }
+
+        [Test]
+        public void DefaultImplementationShouldCreateToProperTypeFromMemberNameString()
+        {
+            const string memberName = "Choice3";
+            const string expectedValueString = "Choice3";
+            const MyEnum expectedValueEnum = MyEnum.Choice3;
+            var adt = new ADTEnum<MyEnum>(memberName);
             Assert.IsInstanceOf<string>(adt.Value);
             Assert.IsInstanceOf<MyEnum>(adt.EnumValue);
             Assert.AreEqual(expectedValueString, adt.Value);
