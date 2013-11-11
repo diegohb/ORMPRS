@@ -31,6 +31,10 @@ namespace MMG.Infra.EFPersistence
         {
             _contextConfig = pContextConfig;
             _cnStringSettings = ConfigurationManager.ConnectionStrings[pConnectionStringName];
+            if (_cnStringSettings == null)
+                throw new PersistenceException
+                    (string.Format("Unable to load connection settings for connection string '{0}'.", pConnectionStringName));
+
             _factory = DbProviderFactories.GetFactory(_cnStringSettings.ProviderName);
             _contextConfig = pContextConfig;
 
