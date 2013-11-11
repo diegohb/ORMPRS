@@ -89,6 +89,7 @@
     <Compile Include="EFPersistence\DBMapping\ShipperPriorityEFMapping.cs" />
     <Compile Include="EFPersistence\EFContextBuilderTests.cs" />
     <Compile Include="EFPersistence\EFContextManagerTests.cs" />
+    <Compile Include="EFPersistence\EFGenericRepoTests.cs" />
     <Compile Include="Northwind\Address.cs" />
     <Compile Include="Northwind\Category.cs" />
     <Compile Include="Northwind\Contact.cs" />
