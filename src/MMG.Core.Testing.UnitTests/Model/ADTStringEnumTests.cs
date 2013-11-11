@@ -1,5 +1,5 @@
 // *************************************************
-// MMG.Core.Testing.UnitTests.ADTEnumTests.cs
+// MMG.Core.Testing.UnitTests.ADTStringEnumTests.cs
 // Last Modified: 11/11/2013 9:51 AM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
@@ -12,7 +12,7 @@ using NUnit.Framework;
 namespace MMG.Core.Testing.UnitTests.Model
 {
     [TestFixture]
-    public class ADTEnumTests
+    public class ADTStringEnumTests
     {
         private enum MyEnum
         {
@@ -21,13 +21,13 @@ namespace MMG.Core.Testing.UnitTests.Model
             [System.ComponentModel.Description("Choice 3")] Choice3
         }
 
-        private class EnumADT : ADTStringEnum<MyEnum>
+        private class StringEnumADT : ADTStringEnum<MyEnum>
         {
             #region Constructors
 
-            public EnumADT(MyEnum pValue) : base(pValue) {}
+            public StringEnumADT(MyEnum pValue) : base(pValue) {}
 
-            public EnumADT(string pValue) : base(pValue) {}
+            public StringEnumADT(string pValue) : base(pValue) {}
 
             #endregion
 
@@ -39,24 +39,24 @@ namespace MMG.Core.Testing.UnitTests.Model
 
             #region Operators
 
-            public static implicit operator EnumADT(MyEnum pValue)
+            public static implicit operator StringEnumADT(MyEnum pValue)
             {
-                return new EnumADT(pValue);
+                return new StringEnumADT(pValue);
             }
 
-            public static implicit operator MyEnum(EnumADT pEnumTypeADT)
+            public static implicit operator MyEnum(StringEnumADT pEnumTypeADT)
             {
                 return pEnumTypeADT.EnumValue;
             }
 
-            public static implicit operator string(EnumADT pEnumTypeADT)
+            public static implicit operator string(StringEnumADT pEnumTypeADT)
             {
                 return pEnumTypeADT.Value;
             }
 
-            public static implicit operator EnumADT(string pEnumDescription)
+            public static implicit operator StringEnumADT(string pEnumDescription)
             {
-                return new EnumADT(pEnumDescription);
+                return new StringEnumADT(pEnumDescription);
             }
 
             #endregion
@@ -77,7 +77,7 @@ namespace MMG.Core.Testing.UnitTests.Model
         {
             const string expectedValueString = "Choice 1";
             const MyEnum expectedValueEnum = MyEnum.Choice1;
-            var adt = new EnumADT(expectedValueString);
+            var adt = new StringEnumADT(expectedValueString);
             Assert.IsInstanceOf<string>(adt.Value);
             Assert.IsInstanceOf<MyEnum>(adt.EnumValue);
             Assert.AreEqual(expectedValueString, adt.Value);
@@ -103,7 +103,7 @@ namespace MMG.Core.Testing.UnitTests.Model
             const string memberName = "Choice1";
             const string expectedValueString = "Choice 1";
             const MyEnum expectedValueEnum = MyEnum.Choice1;
-            var adt = new EnumADT(memberName);
+            var adt = new StringEnumADT(memberName);
             Assert.IsInstanceOf<string>(adt.Value);
             Assert.IsInstanceOf<MyEnum>(adt.EnumValue);
             Assert.AreEqual(expectedValueString, adt.Value);
@@ -115,7 +115,7 @@ namespace MMG.Core.Testing.UnitTests.Model
         {
             const string expectedValueString = "Choice 1";
             const MyEnum expectedValueEnum = MyEnum.Choice1;
-            var adt = new EnumADT(expectedValueEnum);
+            var adt = new StringEnumADT(expectedValueEnum);
             Assert.IsInstanceOf<string>(adt.Value);
             Assert.IsInstanceOf<MyEnum>(adt.EnumValue);
             Assert.AreEqual(expectedValueString, adt.Value);
@@ -128,7 +128,7 @@ namespace MMG.Core.Testing.UnitTests.Model
             const string changeValueString = "Choice 2";
             const MyEnum expectedChangedValueEnum = MyEnum.Choice2;
             const MyEnum expectedInitialValueEnum = MyEnum.Choice1;
-            var adt = new EnumADT(expectedInitialValueEnum);
+            var adt = new StringEnumADT(expectedInitialValueEnum);
             Assert.AreEqual(expectedInitialValueEnum, adt.EnumValue);
             adt.Value = changeValueString;
             Assert.AreEqual
@@ -142,7 +142,7 @@ namespace MMG.Core.Testing.UnitTests.Model
             const string changeValueString = "Choice2";
             const MyEnum expectedChangedValueEnum = MyEnum.Choice2;
             const MyEnum expectedInitialValueEnum = MyEnum.Choice1;
-            var adt = new EnumADT(expectedInitialValueEnum);
+            var adt = new StringEnumADT(expectedInitialValueEnum);
             Assert.AreEqual(expectedInitialValueEnum, adt.EnumValue);
             adt.Value = changeValueString;
             Assert.AreEqual
@@ -154,7 +154,7 @@ namespace MMG.Core.Testing.UnitTests.Model
         public void ShouldConvertToUnderlyingType()
         {
             const string expectedValue = "Choice 3";
-            var adt = new EnumADT(expectedValue);
+            var adt = new StringEnumADT(expectedValue);
             var actualValue = Convert.ToString(adt);
             Assert.AreEqual(expectedValue, actualValue);
         }
@@ -163,11 +163,11 @@ namespace MMG.Core.Testing.UnitTests.Model
         public void ShouldConvertFromUnderlyingTypeString()
         {
             const string underlyingValue = "Choice 3";
-            EnumADT actualValue = underlyingValue;
+            StringEnumADT actualValue = underlyingValue;
             ADT<string> actualValueFromBase = underlyingValue;
             Assert.IsInstanceOf<string>(underlyingValue);
-            Assert.IsAssignableFrom<EnumADT>(actualValueFromBase);
-            var expectedValue = new EnumADT(underlyingValue);
+            Assert.IsAssignableFrom<StringEnumADT>(actualValueFromBase);
+            var expectedValue = new StringEnumADT(underlyingValue);
             Assert.True(expectedValue.Equals(actualValue));
             Assert.True(expectedValue.Equals(actualValueFromBase));
             Assert.True(MyEnum.Choice3 == actualValue);
@@ -177,9 +177,9 @@ namespace MMG.Core.Testing.UnitTests.Model
         public void ShouldConvertFromUnderlyingTypeEnum()
         {
             const MyEnum underlyingValue = MyEnum.Choice3;
-            EnumADT actualValue = underlyingValue;
+            StringEnumADT actualValue = underlyingValue;
             Assert.IsInstanceOf<MyEnum>(underlyingValue);
-            var expectedValue = new EnumADT(underlyingValue);
+            var expectedValue = new StringEnumADT(underlyingValue);
             Assert.True(expectedValue.Equals(actualValue));
             Assert.True(MyEnum.Choice3 == actualValue);
         }
@@ -188,7 +188,7 @@ namespace MMG.Core.Testing.UnitTests.Model
         public void ShouldConvertImplicitlyToUnderlyingType()
         {
             const string expectedValue = "Choice 3";
-            var adt = new EnumADT(expectedValue);
+            var adt = new StringEnumADT(expectedValue);
             Assert.AreEqual(expectedValue, adt);
             Assert.True(MyEnum.Choice3 == adt);
         }

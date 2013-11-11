@@ -45,7 +45,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\ADTEnumTests.cs" />
+    <Compile Include="Model\ADTByteEnumTests.cs" />
+    <Compile Include="Model\ADTStringEnumTests.cs" />
     <Compile Include="Model\ADTIntegerTests.cs" />
     <Compile Include="Model\ADTStringTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
