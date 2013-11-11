@@ -32,28 +32,14 @@ namespace MMG.Core.Testing.UnitTests.Model
             Assert.AreEqual(expectedByteValue, adt.Value);
             Assert.AreEqual(expectedValueEnum, adt.EnumValue);
         }
-/*
         [Test]
-        public void DefaultImplementationShouldCreateToProperTypeFromMemberNameString()
+        public void ShouldCreateToProperTypeFromMemberNameString()
         {
             const string memberName = "Choice30";
             const byte expectedValueString = 30;
             const MyEnum expectedValueEnum = MyEnum.Choice30;
             var adt = new ByteEnumADT<MyEnum>(memberName);
-            Assert.IsInstanceOf<string>(adt.Value);
-            Assert.IsInstanceOf<MyEnum>(adt.EnumValue);
-            Assert.AreEqual(expectedValueString, adt.Value);
-            Assert.AreEqual(expectedValueEnum, adt.EnumValue);
-        }
-
-        [Test]
-        public void ShouldCreateToProperTypeFromMemberNameString()
-        {
-            const string memberName = "Choice1";
-            const string expectedValueString = "Choice 1";
-            const MyEnum expectedValueEnum = MyEnum.Choice10;
-            var adt = new ByteEnumADT<MyEnum>(memberName);
-            Assert.IsInstanceOf<string>(adt.Value);
+            Assert.IsInstanceOf<byte>(adt.Value);
             Assert.IsInstanceOf<MyEnum>(adt.EnumValue);
             Assert.AreEqual(expectedValueString, adt.Value);
             Assert.AreEqual(expectedValueEnum, adt.EnumValue);
@@ -62,24 +48,24 @@ namespace MMG.Core.Testing.UnitTests.Model
         [Test]
         public void ShouldCreateToProperTypeFromEnum()
         {
-            const string expectedValueString = "Choice 1";
+            const byte expectedByteValue = 10;
             const MyEnum expectedValueEnum = MyEnum.Choice10;
             var adt = new ByteEnumADT<MyEnum>(expectedValueEnum);
-            Assert.IsInstanceOf<string>(adt.Value);
+            Assert.IsInstanceOf<byte>(adt.Value);
             Assert.IsInstanceOf<MyEnum>(adt.EnumValue);
-            Assert.AreEqual(expectedValueString, adt.Value);
+            Assert.AreEqual(expectedByteValue, adt.Value);
             Assert.AreEqual(expectedValueEnum, adt.EnumValue);
         }
 
         [Test]
         public void SetValueDescriptionStringShouldChangeEnumValue()
         {
-            const string changeValueString = "Choice 2";
+            const byte expectedByteValue = 20;
             const MyEnum expectedChangedValueEnum = MyEnum.Choice20;
             const MyEnum expectedInitialValueEnum = MyEnum.Choice10;
             var adt = new ByteEnumADT<MyEnum>(expectedInitialValueEnum);
             Assert.AreEqual(expectedInitialValueEnum, adt.EnumValue);
-            adt.Value = changeValueString;
+            adt.Value = expectedByteValue;
             Assert.AreEqual
                 (expectedChangedValueEnum, adt.EnumValue,
                     "If Value is overriden at derived type, you shoudl call into setStringValue or implement setting _enumValue yourself.");
@@ -88,12 +74,12 @@ namespace MMG.Core.Testing.UnitTests.Model
         [Test]
         public void SetValueMemberNameStringShouldChangeEnumValue()
         {
-            const string changeValueString = "Choice2";
+            const byte changedByteValue = 20;
             const MyEnum expectedChangedValueEnum = MyEnum.Choice20;
             const MyEnum expectedInitialValueEnum = MyEnum.Choice10;
             var adt = new ByteEnumADT<MyEnum>(expectedInitialValueEnum);
             Assert.AreEqual(expectedInitialValueEnum, adt.EnumValue);
-            adt.Value = changeValueString;
+            adt.Value = changedByteValue;
             Assert.AreEqual
                 (expectedChangedValueEnum, adt.EnumValue,
                     "If Value is overriden at derived type, you shoudl call into setStringValue or implement setting _enumValue yourself.");
@@ -102,20 +88,20 @@ namespace MMG.Core.Testing.UnitTests.Model
         [Test]
         public void ShouldConvertToUnderlyingType()
         {
-            const string expectedValue = "Choice 3";
+            const byte expectedValue = 30;
             var adt = new ByteEnumADT<MyEnum>(expectedValue);
-            var actualValue = Convert.ToString(adt);
+            var actualValue = Convert.ToByte(adt);
             Assert.AreEqual(expectedValue, actualValue);
         }
 
         [Test]
         public void ShouldConvertFromUnderlyingTypeString()
         {
-            const string underlyingValue = "Choice 3";
+            const byte underlyingValue = 30;
             ByteEnumADT<MyEnum> actualValue = underlyingValue;
-            ADT<string> actualValueFromBase = underlyingValue;
-            Assert.IsInstanceOf<string>(underlyingValue);
-            Assert.IsAssignableFrom<ByteEnumADT>(actualValueFromBase);
+            ADT<byte> actualValueFromBase = underlyingValue;
+            Assert.IsInstanceOf<byte>(underlyingValue);
+            Assert.IsAssignableFrom<ByteEnumADT<MyEnum>>(actualValueFromBase);
             var expectedValue = new ByteEnumADT<MyEnum>(underlyingValue);
             Assert.True(expectedValue.Equals(actualValue));
             Assert.True(expectedValue.Equals(actualValueFromBase));
@@ -136,11 +122,10 @@ namespace MMG.Core.Testing.UnitTests.Model
         [Test]
         public void ShouldConvertImplicitlyToUnderlyingType()
         {
-            const string expectedValue = "Choice 3";
+            const byte expectedValue = 30;
             var adt = new ByteEnumADT<MyEnum>(expectedValue);
             Assert.AreEqual(expectedValue, adt);
             Assert.True(MyEnum.Choice30 == adt);
-        }*/
-
+        }
     }
 }

@@ -5,6 +5,7 @@
 // *************************************************
 
 using System;
+using System.ComponentModel;
 
 namespace MMG.Core.Model
 {
@@ -14,6 +15,15 @@ namespace MMG.Core.Model
         #region Constructors
 
         public ByteEnumADT(TEnum pValue) : base(pValue) {}
+
+        /// <summary>
+        /// Creates the ADT based on enum member name.
+        /// </summary>
+        /// <param name="pValue">The name of the member.</param>
+        public ByteEnumADT(string pValue)
+        {
+            setValueFromEnumMemberName(pValue);
+        }
 
         public ByteEnumADT(byte pValue) : base(pValue) {}
 
@@ -51,6 +61,23 @@ namespace MMG.Core.Model
         protected override TEnum convertUnderlyingValueToEnumValue(byte pValue)
         {
             return (TEnum) Enum.ToObject(typeof (TEnum), pValue);
+        }
+
+        /// <summary>
+        /// This method will parse a string into an enum value. The default implementation use Enum.Parse which matches the name of one the enum members.
+        /// </summary>
+        /// <param name="pValue">The string value representing the value of the enum.</param>
+        /// <returns>This method should return the enum value from the string provided.</returns>
+        private void setValueFromEnumMemberName(string pValue)
+        {
+            var enumType = typeof(TEnum);
+            if (!enumType.IsEnumDefined(pValue))
+                throw new InvalidEnumArgumentException(string.Format("Invalid enum value '{0}' for enum type '{1}'.", pValue, enumType.Name));
+
+            //parse string matched to enum member name.
+            var newEnumValue = (TEnum)Enum.Parse(typeof(TEnum), pValue, true);
+            _enumValue = newEnumValue;
+            _underlyingValue = convertEnumValueToUnderlyingValue(_enumValue.Value);
         }
     }
 }

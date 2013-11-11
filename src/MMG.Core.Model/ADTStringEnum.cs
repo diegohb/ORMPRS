@@ -48,11 +48,7 @@ namespace MMG.Core.Model
                 throw new InvalidEnumArgumentException(string.Format("Invalid enum value '{0}' for enum type '{1}'.", pValue, enumType.Name));
 
             //parse string matched to enum member name.
-            var newEnumValue = (TEnum) Enum.Parse(typeof (TEnum), pValue, true);
-            if (!_enumValue.Equals(newEnumValue))
-                _enumValue = newEnumValue;
-
-            return newEnumValue;
+            return (TEnum) Enum.Parse(typeof (TEnum), pValue, true);
         }
     }
 }
