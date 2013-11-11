@@ -16,7 +16,7 @@ namespace MMG.Core.Model
 
         #region Constructors
 
-        protected ADTEnumBase() {}
+        public ADTEnumBase() {}
 
         public ADTEnumBase(TEnum pEnumValue)
         {

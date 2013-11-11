@@ -14,6 +14,8 @@ namespace MMG.Core.Model
     {
         #region Constructors
 
+        public ByteEnumADT() {}
+
         public ByteEnumADT(TEnum pValue) : base(pValue) {}
 
         /// <summary>

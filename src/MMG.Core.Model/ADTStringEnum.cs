@@ -14,7 +14,7 @@ namespace MMG.Core.Model
     {
         #region Constructors
 
-        protected ADTStringEnum() {}
+        public ADTStringEnum() {}
 
         public ADTStringEnum(TEnum pEnumValue)
             : base(pEnumValue) {}

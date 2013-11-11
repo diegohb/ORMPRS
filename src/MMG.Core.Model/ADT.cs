@@ -18,7 +18,7 @@ namespace MMG.Core.Model
     /// </remarks>
     public class ADT<TUnderlyingType> : IConvertible, IEquatable<TUnderlyingType>
     {
-        protected ADT() {}
+        public ADT() {}
 
         public ADT(TUnderlyingType pValue)
         {

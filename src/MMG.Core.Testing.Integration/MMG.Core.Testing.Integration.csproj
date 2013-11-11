@@ -81,9 +81,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EFPersistence\ADTMappingTests.cs" />
     <Compile Include="EFPersistence\DBMapping\AddressEFMapping.cs" />
     <Compile Include="EFPersistence\DBMapping\ContactEFMapping.cs" />
     <Compile Include="EFPersistence\DBMapping\CustomerEFMapping.cs" />
+    <Compile Include="EFPersistence\DBMapping\ShipperEFMapping.cs" />
+    <Compile Include="EFPersistence\DBMapping\ShipperPriorityEFMapping.cs" />
     <Compile Include="EFPersistence\EFContextBuilderTests.cs" />
     <Compile Include="EFPersistence\EFContextManagerTests.cs" />
     <Compile Include="Northwind\Address.cs" />
@@ -91,6 +94,13 @@
     <Compile Include="Northwind\Contact.cs" />
     <Compile Include="Northwind\Customer.cs" />
     <Compile Include="Northwind\Employee.cs" />
+    <Compile Include="Northwind\Northwind.DbContext.cs">
+      <DependentUpon>Northwind.DbContext.tt</DependentUpon>
+      <SubType>Code</SubType>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Northwind\NorthwindDB.cs" />
     <Compile Include="Northwind\Order.cs" />
     <Compile Include="Northwind\OrderDetail.cs" />
     <Compile Include="Northwind\Product.cs" />
@@ -110,9 +120,17 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Northwind\Northwind.DbContext.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Northwind.DbContext1.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MMG.Core.Model\MMG.Core.Model.csproj">
+      <Project>{4CC61436-2A47-4F05-BC2E-2789DD57FFC6}</Project>
+      <Name>MMG.Core.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MMG.Core.Persistence\MMG.Core.Persistence.csproj">
       <Project>{E015148C-1A1B-492F-A024-2C1F574AD202}</Project>
       <Name>MMG.Core.Persistence</Name>
