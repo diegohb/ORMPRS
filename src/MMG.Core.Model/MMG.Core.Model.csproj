@@ -39,7 +39,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ADT.cs" />
-    <Compile Include="ADTEnum.cs" />
+    <Compile Include="ADTStringEnum.cs" />
+    <Compile Include="ADTEnumBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

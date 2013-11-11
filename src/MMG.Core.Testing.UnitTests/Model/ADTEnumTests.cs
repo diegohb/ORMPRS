@@ -21,7 +21,7 @@ namespace MMG.Core.Testing.UnitTests.Model
             [System.ComponentModel.Description("Choice 3")] Choice3
         }
 
-        private class EnumADT : ADTEnum<MyEnum>
+        private class EnumADT : ADTStringEnum<MyEnum>
         {
             #region Constructors
 
@@ -33,8 +33,8 @@ namespace MMG.Core.Testing.UnitTests.Model
 
             public override string Value
             {
-                get { return _stringValue; }
-                set { setStringValue(value); }
+                get { return _underlyingValue; }
+                set { setValue(value); }
             }
 
             #region Operators
@@ -61,12 +61,12 @@ namespace MMG.Core.Testing.UnitTests.Model
 
             #endregion
 
-            protected override string convertEnumMemberToStringValue(MyEnum pEnumValue)
+            protected override string convertEnumValueToUnderlyingValue(MyEnum pEnumValue)
             {
                 return pEnumValue.ToDescriptionString();
             }
 
-            protected override MyEnum convertStringToEnumValue(string pValue)
+            protected override MyEnum convertUnderlyingValueToEnumValue(string pValue)
             {
                 return pValue.ToEnum<MyEnum>();
             }
@@ -90,7 +90,7 @@ namespace MMG.Core.Testing.UnitTests.Model
             const string memberName = "Choice3";
             const string expectedValueString = "Choice3";
             const MyEnum expectedValueEnum = MyEnum.Choice3;
-            var adt = new ADTEnum<MyEnum>(memberName);
+            var adt = new ADTStringEnum<MyEnum>(memberName);
             Assert.IsInstanceOf<string>(adt.Value);
             Assert.IsInstanceOf<MyEnum>(adt.EnumValue);
             Assert.AreEqual(expectedValueString, adt.Value);
