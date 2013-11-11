@@ -4,9 +4,11 @@
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
+using System;
+
 namespace MMG.Core.Model
 {
-    public abstract class ADTEnumBase<TEnum, TUnderlyingValue> : ADT<TUnderlyingValue>
+    public abstract class ADTEnumBase<TEnum, TUnderlyingValue> : ADT<TUnderlyingValue>, IEquatable<TEnum>
         where TEnum : struct
     {
         protected TEnum? _enumValue;
@@ -38,6 +40,11 @@ namespace MMG.Core.Model
         {
             get { return _underlyingValue; }
             set { setValue(value); }
+        }
+
+        public bool Equals(TEnum pOtherEnumValue)
+        {
+            return EnumValue.Equals(pOtherEnumValue);
         }
 
         protected virtual void setValue(TUnderlyingValue pStringValue)
