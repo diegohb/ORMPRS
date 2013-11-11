@@ -1,11 +1,10 @@
 // *************************************************
 // MMG.Core.Testing.UnitTests.ADTEnumTests.cs
-// Last Modified: 11/08/2013 3:02 PM
+// Last Modified: 11/11/2013 9:51 AM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
 using System;
-using System.ComponentModel;
 using MMG.Common.Extensions;
 using MMG.Core.Model;
 using NUnit.Framework;
@@ -22,7 +21,6 @@ namespace MMG.Core.Testing.UnitTests.Model
             [System.ComponentModel.Description("Choice 3")] Choice3
         }
 
-        [TypeConverter(typeof(EnumConverter))]
         private class EnumADT : ADTEnumBase<MyEnum>
         {
             #region Constructors
@@ -33,7 +31,7 @@ namespace MMG.Core.Testing.UnitTests.Model
 
             #endregion
 
-            public override string Value 
+            public override string Value
             {
                 get { return _stringValue; }
                 set { setStringValue(value); }
@@ -62,7 +60,7 @@ namespace MMG.Core.Testing.UnitTests.Model
             }
 
             #endregion
-            
+
             protected override string convertEnumMemberToStringValue(MyEnum pEnumValue)
             {
                 return pEnumValue.ToDescriptionString();
