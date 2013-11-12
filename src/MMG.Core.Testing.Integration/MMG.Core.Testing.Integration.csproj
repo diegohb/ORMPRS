@@ -104,6 +104,7 @@
     <Compile Include="Northwind\NorthwindDB.cs" />
     <Compile Include="Northwind\Order.cs" />
     <Compile Include="Northwind\OrderDetail.cs" />
+    <Compile Include="Northwind\PriorityTypeADT.cs" />
     <Compile Include="Northwind\Product.cs" />
     <Compile Include="Northwind\Ship.cs" />
     <Compile Include="Northwind\Shipper.cs" />

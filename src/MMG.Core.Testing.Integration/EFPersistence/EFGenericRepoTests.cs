@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Linq;
 using MMG.Core.Persistence;
 using MMG.Core.Persistence.Impl;
 using MMG.Core.Testing.Integration.Northwind;
 using MMG.Infra.EFPersistence;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace MMG.Core.Testing.Integration.EFPersistence
 {
@@ -62,6 +64,7 @@ namespace MMG.Core.Testing.Integration.EFPersistence
             Assert.IsInstanceOf<EFDbContext>(dbContext);
 
             _nwDB = new NorthwindDB();
+            _nwDB.Configuration.ProxyCreationEnabled = false;
             _repo = new EFGenericRepository((EFDbContext)dbContext);
         }
 
