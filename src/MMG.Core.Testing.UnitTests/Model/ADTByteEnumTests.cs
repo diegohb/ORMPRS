@@ -20,6 +20,15 @@ namespace MMG.Core.Testing.UnitTests.Model
             Choice30 = 30
         }
 
+        [Test]
+        public void Nullable_CanSetToNull()
+        {
+            var adt = new NullableByteEnumADT<MyEnum>();
+            Assert.IsNotNull(adt);
+            adt.Value = null;
+            Assert.IsNull(adt.Value);
+            Assert.IsNull(adt.EnumValue);
+        }
 
         [Test]
         public void ShouldCreateToProperTypeFromUnderlyingValue()

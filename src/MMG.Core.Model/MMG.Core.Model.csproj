@@ -42,6 +42,9 @@
     <Compile Include="ADTStringEnum.cs" />
     <Compile Include="ADTEnumBase.cs" />
     <Compile Include="ByteEnumADT.cs" />
+    <Compile Include="NullableADT.cs" />
+    <Compile Include="NullableADTEnumBase.cs" />
+    <Compile Include="NullableByteEnumADT.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
