@@ -17,6 +17,8 @@ namespace MMG.Core.Testing.Integration.EFPersistence
     [TestFixture]
     public class EFContextManagerTests
     {
+        private static bool _needsInit = false;
+
         [Test]
         public void InitializeManager()
         {
@@ -30,9 +32,12 @@ namespace MMG.Core.Testing.Integration.EFPersistence
 
         private static void initializeStorage()
         {
-            Assert.IsNull(EFContextManager.Instance.Storage);
-            var storage = new SimpleDbContextStorage();
-            EFContextManager.Instance.InitStorage(storage);
+            if (EFContextManager.Instance.Storage == null)
+            {
+                var storage = new SimpleDbContextStorage();
+                EFContextManager.Instance.InitStorage(storage);
+                _needsInit = true;
+            }
             Assert.IsNotNull(EFContextManager.Instance.Storage);
             Assert.IsInstanceOf<IDbContextStorage>(EFContextManager.Instance.Storage);
         }
@@ -45,8 +50,13 @@ namespace MMG.Core.Testing.Integration.EFPersistence
 
         private static void configureNorthwindContext()
         {
-            Assert.Throws<PersistenceException>(() => EFContextManager.Instance.CurrentFor(Utility.NorthwindDBConnectionName));
-            EFContextManager.Instance.AddContextBuilder(Utility.NorthwindDBConnectionName, new EFContextConfiguration(new[] { "MMG.Core.Testing.Integration" }));
+            if (EFContextManager.Instance.Storage == null || _needsInit)
+            {
+                Assert.Throws<PersistenceException>(() => EFContextManager.Instance.CurrentFor(Utility.NorthwindDBConnectionName));
+                EFContextManager.Instance.AddContextBuilder
+                    (Utility.NorthwindDBConnectionName, new EFContextConfiguration(new[] {"MMG.Core.Testing.Integration"}));
+            }
+
             var dbContext = EFContextManager.Instance.CurrentFor(Utility.NorthwindDBConnectionName);
             Assert.IsNotNull(dbContext);
             Assert.IsInstanceOf<EFDbContext>(dbContext);

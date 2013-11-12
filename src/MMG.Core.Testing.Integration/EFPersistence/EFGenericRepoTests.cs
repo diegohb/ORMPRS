@@ -44,16 +44,19 @@ namespace MMG.Core.Testing.Integration.EFPersistence
 
         private static void initializeStorage()
         {
-            Assert.IsNull(EFContextManager.Instance.Storage);
-            var storage = new SimpleDbContextStorage();
-            EFContextManager.Instance.InitStorage(storage);
+            if (EFContextManager.Instance.Storage == null)
+            {
+                var storage = new SimpleDbContextStorage();
+                EFContextManager.Instance.InitStorage(storage);
+                EFContextManager.Instance.AddContextBuilder(Utility.NorthwindDBConnectionName, new EFContextConfiguration(new[] { "MMG.Core.Testing.Integration" }));
+            }
+
             Assert.IsNotNull(EFContextManager.Instance.Storage);
             Assert.IsInstanceOf<IDbContextStorage>(EFContextManager.Instance.Storage);
         }
 
         private void configureNorthwindContext()
         {
-            EFContextManager.Instance.AddContextBuilder(Utility.NorthwindDBConnectionName, new EFContextConfiguration(new[] { "MMG.Core.Testing.Integration" }));
             var dbContext = EFContextManager.Instance.CurrentFor(Utility.NorthwindDBConnectionName);
             Assert.IsNotNull(dbContext);
             Assert.IsInstanceOf<EFDbContext>(dbContext);
