@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Linq;
 using MMG.Core.Persistence;
+using MMG.Core.Persistence.Exceptions;
 using MMG.Core.Persistence.Impl;
 using MMG.Core.Testing.Integration.Northwind;
 using MMG.Infra.EFPersistence;
@@ -59,12 +60,13 @@ namespace MMG.Core.Testing.Integration.EFPersistence
 
         private static void initializeStorage()
         {
-            if (EFContextManager.Instance.Storage == null)
+            DbContextInitializer.Instance().InitializeDbContextOnce(() =>
             {
+                Assert.Throws<PersistenceException>(() => EFContextManager.Instance.CurrentFor(Utility.NorthwindDBConnectionName));
                 var storage = new SimpleDbContextStorage();
                 EFContextManager.Instance.InitStorage(storage);
                 EFContextManager.Instance.AddContextBuilder(Utility.NorthwindDBConnectionName, new EFContextConfiguration(new[] { "MMG.Core.Testing.Integration" }));
-            }
+            });
 
             Assert.IsNotNull(EFContextManager.Instance.Storage);
             Assert.IsInstanceOf<IDbContextStorage>(EFContextManager.Instance.Storage);

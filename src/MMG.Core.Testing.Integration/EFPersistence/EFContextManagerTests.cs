@@ -17,8 +17,6 @@ namespace MMG.Core.Testing.Integration.EFPersistence
     [TestFixture]
     public class EFContextManagerTests
     {
-        private static bool _needsInit = false;
-
         [Test]
         public void InitializeManager()
         {
@@ -32,12 +30,14 @@ namespace MMG.Core.Testing.Integration.EFPersistence
 
         private static void initializeStorage()
         {
-            if (EFContextManager.Instance.Storage == null)
+            DbContextInitializer.Instance().InitializeDbContextOnce(() =>
             {
+                Assert.Throws<PersistenceException>(() => EFContextManager.Instance.CurrentFor(Utility.NorthwindDBConnectionName));
                 var storage = new SimpleDbContextStorage();
                 EFContextManager.Instance.InitStorage(storage);
-                _needsInit = true;
-            }
+                EFContextManager.Instance.AddContextBuilder(Utility.NorthwindDBConnectionName, new EFContextConfiguration(new[] { "MMG.Core.Testing.Integration" }));
+            });
+
             Assert.IsNotNull(EFContextManager.Instance.Storage);
             Assert.IsInstanceOf<IDbContextStorage>(EFContextManager.Instance.Storage);
         }
@@ -50,13 +50,6 @@ namespace MMG.Core.Testing.Integration.EFPersistence
 
         private static void configureNorthwindContext()
         {
-            if (EFContextManager.Instance.Storage == null || _needsInit)
-            {
-                Assert.Throws<PersistenceException>(() => EFContextManager.Instance.CurrentFor(Utility.NorthwindDBConnectionName));
-                EFContextManager.Instance.AddContextBuilder
-                    (Utility.NorthwindDBConnectionName, new EFContextConfiguration(new[] {"MMG.Core.Testing.Integration"}));
-            }
-
             var dbContext = EFContextManager.Instance.CurrentFor(Utility.NorthwindDBConnectionName);
             Assert.IsNotNull(dbContext);
             Assert.IsInstanceOf<EFDbContext>(dbContext);
@@ -92,7 +85,7 @@ namespace MMG.Core.Testing.Integration.EFPersistence
             var bolidCustRepo2 = repo2.GetByKey<Customer>("BOLID");
             Assert.IsNotNull(bolidCustRepo2);
             Assert.IsNotNull(bolidCustRepo1);
-            
+
             /*bolidCustRepo1.Contact.Address.Region = "Test";
             repo1.Update(bolidCustRepo1);
             repo1.UnitOfWork.SaveChanges();

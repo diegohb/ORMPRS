@@ -74,7 +74,7 @@ namespace MMG.Core.Testing.Integration.EFPersistence
                         Street = "123 Abc Rd",
                         City = "Springfield",
                         PostalCode = "20850",
-                        Country = CountryEnum.USA
+                        Country = CountryEnum.UnitedStates
                     },
                     Title = "tester"
                 }
@@ -85,22 +85,48 @@ namespace MMG.Core.Testing.Integration.EFPersistence
 
             var supplierFromDB = _nwDB.SuppliersSet.SingleOrDefault(p => p.Id == insertedSupplier.Id);
             Assert.IsNotNull(supplierFromDB);
-            Assert.AreEqual(CountryEnum.USA, supplierFromDB.Contact.Address.Country);
-            Assert.AreEqual("United States", supplierFromDB.Contact.Address.Country);
+            Assert.AreEqual(CountryEnum.UnitedStates, supplierFromDB.Contact.Address.Country);
+            Assert.AreEqual("US", supplierFromDB.Contact.Address.Country);
+
+            var supplierCountryViaString = new Supplier
+            {
+                Name = "nUnit Test 2",
+                Contact = new Contact
+                {
+                    Address = new Address
+                    {
+                        Street = "123 Abc Rd",
+                        City = "Springfield",
+                        Country = "UK"
+                    },
+                    Title = "tester"
+                }
+            };
+
+            var insertedCountryDescriptionSupplier = _repo.Save(supplierCountryViaString);
+            Assert.True(insertedCountryDescriptionSupplier.Id > 0);
+
+            var supplierCountryDescriptionFromDB = _nwDB.SuppliersSet.SingleOrDefault(p => p.Id == insertedCountryDescriptionSupplier.Id);
+            Assert.IsNotNull(supplierCountryDescriptionFromDB);
+            Assert.AreEqual(CountryEnum.UnitedKingdom, supplierCountryDescriptionFromDB.Contact.Address.Country);
+            Assert.AreEqual("UK", supplierCountryDescriptionFromDB.Contact.Address.Country.Value);
         }
 
         private static void initializeStorage()
         {
-            Assert.IsNull(EFContextManager.Instance.Storage);
-            var storage = new SimpleDbContextStorage();
-            EFContextManager.Instance.InitStorage(storage);
+            DbContextInitializer.Instance().InitializeDbContextOnce(() =>
+            {
+                var storage = new SimpleDbContextStorage();
+                EFContextManager.Instance.InitStorage(storage);
+                EFContextManager.Instance.AddContextBuilder(Utility.NorthwindDBConnectionName, new EFContextConfiguration(new[] { "MMG.Core.Testing.Integration" }));
+            });
+
             Assert.IsNotNull(EFContextManager.Instance.Storage);
             Assert.IsInstanceOf<IDbContextStorage>(EFContextManager.Instance.Storage);
         }
 
         private void configureNorthwindContext()
         {
-            EFContextManager.Instance.AddContextBuilder(Utility.NorthwindDBConnectionName, new EFContextConfiguration(new[] { "MMG.Core.Testing.Integration" }));
             var dbContext =  EFContextManager.Instance.CurrentFor(Utility.NorthwindDBConnectionName);
             Assert.IsNotNull(dbContext);
             Assert.IsInstanceOf<EFDbContext>(dbContext);
