@@ -47,9 +47,9 @@ namespace MMG.Core.Model
             return EnumValue.Equals(pOtherEnumValue);
         }
 
-        protected virtual void setValue(TUnderlyingValue pStringValue)
+        protected virtual void setValue(TUnderlyingValue pValue)
         {
-            var enumValue = convertUnderlyingValueToEnumValue(pStringValue);
+            var enumValue = convertUnderlyingValueToEnumValue(pValue);
             if (!_enumValue.Equals(enumValue))
                 _enumValue = enumValue;
 
