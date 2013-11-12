@@ -51,7 +51,7 @@ namespace MMG.Core.Model
 
         public virtual TypeCode GetTypeCode()
         {
-            return Type.GetTypeCode(Value.GetType());
+            return Type.GetTypeCode(typeof(TUnderlyingType));
         }
 
         public virtual bool ToBoolean(IFormatProvider provider)
