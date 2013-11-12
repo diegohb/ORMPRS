@@ -31,6 +31,10 @@ namespace MMG.Infra.EFPersistence
         {
             _contextConfig = pContextConfig;
             _cnStringSettings = ConfigurationManager.ConnectionStrings[pConnectionStringName];
+            if (_cnStringSettings == null)
+                throw new PersistenceException
+                    (string.Format("Unable to load connection settings for connection string '{0}'.", pConnectionStringName));
+
             _factory = DbProviderFactories.GetFactory(_cnStringSettings.ProviderName);
             _contextConfig = pContextConfig;
 
@@ -97,7 +101,7 @@ namespace MMG.Infra.EFPersistence
                     catch (Exception e)
                     {
                         throw new PersistenceException
-                            ("Unable to find mapping assembly '{0}'. You must provide an assembly display name or a full path to a dll.", e);
+                            (string.Format("Unable to find mapping assembly '{0}'. You must provide an assembly display name or a full path to a dll.", mappingAssembly), e);
                     }
                 }
                 

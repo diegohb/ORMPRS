@@ -1,6 +1,6 @@
 ﻿// *************************************************
 // MMG.Infra.EFPersistence.EFUnitOfWork.cs
-// Last Modified: 08/29/2013 5:02 PM
+// Last Modified: 11/05/2013 6:45 PM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
@@ -70,6 +70,11 @@ namespace MMG.Infra.EFPersistence
                 _transaction.Commit();
                 releaseCurrentTransaction();
             }
+            catch (UpdateException updateException)
+            {
+                RollBackTransaction();
+                throw wrapDataException(updateException);
+            }
             catch
             {
                 RollBackTransaction();
@@ -83,7 +88,15 @@ namespace MMG.Infra.EFPersistence
             {
                 throw new PersistenceException("A transaction is running. Call CommitTransaction instead.");
             }
-            ((IObjectContextAdapter) _dbContext).ObjectContext.SaveChanges();
+
+            try
+            {
+                ((IObjectContextAdapter) _dbContext).ObjectContext.SaveChanges();
+            }
+            catch (UpdateException updateException)
+            {
+                throw wrapDataException(updateException);
+            }
         }
 
         public void SaveChanges(SaveOptions pSaveOptions)
@@ -93,7 +106,14 @@ namespace MMG.Infra.EFPersistence
                 throw new PersistenceException("A transaction is running. Call CommitTransaction instead.");
             }
 
-            ((IObjectContextAdapter) _dbContext).ObjectContext.SaveChanges(pSaveOptions);
+            try
+            {
+                ((IObjectContextAdapter) _dbContext).ObjectContext.SaveChanges(pSaveOptions);
+            }
+            catch (UpdateException updateException)
+            {
+                throw wrapDataException(updateException);
+            }
         }
 
         #region Implementation of IDisposable
@@ -142,6 +162,16 @@ namespace MMG.Infra.EFPersistence
                 _transaction.Dispose();
                 _transaction = null;
             }
+        }
+
+        private static PersistenceException wrapDataException(UpdateException pUpdateException)
+        {
+            var msgDetails = pUpdateException.InnerException != null
+                ? pUpdateException.InnerException.Message
+                : pUpdateException.Message;
+            return new PersistenceException
+                (string.Format("An error has occurred while trying to commit your changes: {0}.", msgDetails),
+                    pUpdateException.InnerException ?? pUpdateException);
         }
     }
 }

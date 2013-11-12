@@ -15,74 +15,73 @@ namespace MMG.Core.Testing.Integration.Northwind
     using System.Linq;
     using MMG.Infra.EFPersistence;
     using MMG.Core.Persistence;
-    
-    
+
+
     public partial class NorthwindDB : EFDbContext, IDbContext
     {
-    	static NorthwindDB()
+        static NorthwindDB()
         {
             Database.SetInitializer<NorthwindDB>(null);
         }
-    
+
         public NorthwindDB()
             : base("name=NorthwindDB")
         {
             this.Configuration.LazyLoadingEnabled = false;
         }
-    
-    
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+
+        /*protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();
-        }
-    
+        }*/
+
         public virtual DbSet<Category> CategoriesSet { get; set; }
-    	
-    	IQueryable<Category> Categories
-    		{
-                get { return this.CategoriesSet; }
-    		}
+
+        IQueryable<Category> Categories
+        {
+            get { return this.CategoriesSet; }
+        }
         public virtual DbSet<Customer> CustomersSet { get; set; }
-    	
-    	IQueryable<Customer> Customers
-    		{
-                get { return this.CustomersSet; }
-    		}
+
+        IQueryable<Customer> Customers
+        {
+            get { return this.CustomersSet; }
+        }
         public virtual DbSet<Employee> EmployeesSet { get; set; }
-    	
-    	IQueryable<Employee> Employees
-    		{
-                get { return this.EmployeesSet; }
-    		}
+
+        IQueryable<Employee> Employees
+        {
+            get { return this.EmployeesSet; }
+        }
         public virtual DbSet<OrderDetail> OrderDetailsSet { get; set; }
-    	
-    	IQueryable<OrderDetail> OrderDetails
-    		{
-                get { return this.OrderDetailsSet; }
-    		}
+
+        IQueryable<OrderDetail> OrderDetails
+        {
+            get { return this.OrderDetailsSet; }
+        }
         public virtual DbSet<Order> OrdersSet { get; set; }
-    	
-    	IQueryable<Order> Orders
-    		{
-                get { return this.OrdersSet; }
-    		}
+
+        IQueryable<Order> Orders
+        {
+            get { return this.OrdersSet; }
+        }
         public virtual DbSet<Product> ProductsSet { get; set; }
-    	
-    	IQueryable<Product> Products
-    		{
-                get { return this.ProductsSet; }
-    		}
+
+        IQueryable<Product> Products
+        {
+            get { return this.ProductsSet; }
+        }
         public virtual DbSet<Shipper> ShippersSet { get; set; }
-    	
-    	IQueryable<Shipper> Shippers
-    		{
-                get { return this.ShippersSet; }
-    		}
+
+        IQueryable<Shipper> Shippers
+        {
+            get { return this.ShippersSet; }
+        }
         public virtual DbSet<Supplier> SuppliersSet { get; set; }
-    	
-    	IQueryable<Supplier> Suppliers
-    		{
-                get { return this.SuppliersSet; }
-    		}
+
+        IQueryable<Supplier> Suppliers
+        {
+            get { return this.SuppliersSet; }
+        }
     }
 }
