@@ -14,6 +14,7 @@ using System.Data.Objects;
 using System.Linq;
 using System.Linq.Expressions;
 using MMG.Core.Persistence;
+using MMG.Core.Persistence.Exceptions;
 using MMG.Core.Query;
 
 namespace MMG.Infra.EFPersistence
@@ -310,7 +311,10 @@ namespace MMG.Infra.EFPersistence
             var container = objContext.MetadataWorkspace.GetEntityContainer(objContext.DefaultContainerName, DataSpace.CSpace);
             var entitySetName = container.BaseEntitySets
                                          .Where(pMeta => pMeta.ElementType.Name == className)
-                                         .Select(pMeta => pMeta.Name).First();
+                                         .Select(pMeta => pMeta.Name).FirstOrDefault();
+
+            if (entitySetName == null)
+                throw new PersistenceException(string.Format("The mapping for entity type '{0}' can not be found.", className));
 
             return string.Format("{0}.{1}", objContext.DefaultContainerName, entitySetName);
         }
