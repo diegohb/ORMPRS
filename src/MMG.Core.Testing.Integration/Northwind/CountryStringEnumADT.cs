@@ -4,6 +4,7 @@
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
+using System;
 using System.ComponentModel;
 using MMG.Common.Extensions;
 using MMG.Core.Model;
@@ -13,10 +14,10 @@ namespace MMG.Core.Testing.Integration.Northwind
 {
     public enum CountryEnum
     {
-        [Description("United Kingdom")]
-        UK,
-        [Description("United States")]
-        USA,
+        [Description("UK")]
+        UnitedKingdom,
+        [Description("USA")]
+        UnitedStates,
         Australia,
         Brazil,
         Canada,
@@ -50,15 +51,33 @@ namespace MMG.Core.Testing.Integration.Northwind
             return new CountryStringEnumADT(pValue);
         }
 
+        public static implicit operator CountryStringEnumADT(string pValue)
+        {
+            return new CountryStringEnumADT(pValue);
+        }
 
         protected override string convertEnumValueToUnderlyingValue(CountryEnum pEnumValue)
         {
-            return pEnumValue.ToDescriptionString();
+            try
+            {
+                return pEnumValue.ToDescriptionString();
+            }
+            catch (Exception e)
+            {
+                return base.convertEnumValueToUnderlyingValue(pEnumValue);
+            }
         }
 
         protected override CountryEnum convertUnderlyingValueToEnumValue(string pValue)
         {
-            return pValue.ToEnum<CountryEnum>();
+            try
+            {
+                return pValue.ToEnum<CountryEnum>();
+            }
+            catch (Exception e)
+            {
+                return base.convertUnderlyingValueToEnumValue(pValue);
+            }
         }
     }
 }

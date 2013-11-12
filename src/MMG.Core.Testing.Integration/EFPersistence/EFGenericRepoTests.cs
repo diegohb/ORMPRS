@@ -49,10 +49,10 @@ namespace MMG.Core.Testing.Integration.EFPersistence
         public void FetchSuppliersWithQuery_ShouldMatch()
         {
             //ARRANGE
-            var expected = _nwDB.SuppliersSet.Where(pSupplier => pSupplier.Id > 3).ToList();
+            var expected = _nwDB.SuppliersSet.Where(pSupplier => pSupplier.Id > 2).ToList();
 
             //ACT
-            var actual = _repo.GetQuery<Supplier>(pSupplier => pSupplier.Id > 3).ToList();
+            var actual = _repo.GetQuery<Supplier>(pSupplier => pSupplier.Id > 2).ToList();
 
             //ASSERT
             CollectionAssert.AreEquivalent(expected, actual);

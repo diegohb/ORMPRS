@@ -86,7 +86,7 @@ namespace MMG.Core.Testing.Integration.EFPersistence
             var supplierFromDB = _nwDB.SuppliersSet.SingleOrDefault(p => p.Id == insertedSupplier.Id);
             Assert.IsNotNull(supplierFromDB);
             Assert.AreEqual(CountryEnum.UnitedStates, supplierFromDB.Contact.Address.Country);
-            Assert.AreEqual("US", supplierFromDB.Contact.Address.Country);
+            Assert.AreEqual("USA", supplierFromDB.Contact.Address.Country);
 
             var supplierCountryViaString = new Supplier
             {
