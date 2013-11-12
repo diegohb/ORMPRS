@@ -1,6 +1,6 @@
 ﻿// *************************************************
-// MMG.Core.Testing.Integration.ShipperPriorityEFMapping.cs
-// Last Modified: 11/12/2013 8:28 AM
+// MMG.Core.Testing.Integration.CountryEFMapping.cs
+// Last Modified: 11/12/2013 8:27 AM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
@@ -10,11 +10,11 @@ using MMG.Core.Testing.Integration.Northwind;
 
 namespace MMG.Core.Testing.Integration.EFPersistence.DBMapping
 {
-    public class ShipperPriorityEFMapping : ComplexTypeConfiguration<PriorityTypeADT>, IMapEntityToDb<PriorityTypeADT>
+    public class CountryEFMapping : ComplexTypeConfiguration<CountryStringEnumADT>, IMapEntityToDb<CountryStringEnumADT>
     {
-        public ShipperPriorityEFMapping()
+        public CountryEFMapping()
         {
-            Property(p => p.Value).HasColumnName("Priority").IsOptional();
+            Property(p => p.Value).HasColumnName("Country").IsOptional().HasMaxLength(15);
         }
     }
 }

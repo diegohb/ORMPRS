@@ -12,7 +12,7 @@ namespace MMG.Core.Testing.Integration.EFPersistence.DBMapping
             Property(p => p.City).HasColumnName("City").HasMaxLength(15);
             Property(p => p.Region).HasColumnName("Region").HasMaxLength(15);
             Property(p => p.PostalCode).HasColumnName("PostalCode").HasMaxLength(60);
-            Property(p => p.Country).HasColumnName("Country").HasMaxLength(15);
+            //Country mapped via ADT complex type config.
         }
     }
 }

@@ -18,6 +18,6 @@ namespace MMG.Core.Testing.Integration.Northwind
 
         public string PostalCode { get; set; }
 
-        public string Country { get; set; }
+        public CountryStringEnumADT Country { get; set; }
     }
 }

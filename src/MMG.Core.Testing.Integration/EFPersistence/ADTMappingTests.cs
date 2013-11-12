@@ -31,11 +31,12 @@ namespace MMG.Core.Testing.Integration.EFPersistence
         public void Destroy()
         {
             _nwDB.ShippersSet.Where(p => p.Name.Contains("nUnit")).ToList().ForEach(pShipper => _nwDB.ShippersSet.Remove(pShipper));
+            _nwDB.SuppliersSet.Where(p => p.Name.Contains("nUnit")).ToList().ForEach(pSupplier => _nwDB.SuppliersSet.Remove(pSupplier));
             _nwDB.SaveChanges();
         }
 
         [Test]
-        public void InsertShipperWithPriority()
+        public void InsertShipperWithPriority_UsingNullableEnumADTOfByte()
         {
             const ShipperPriorityEnum expectedPriority = ShipperPriorityEnum.High;
             var shipper = new Shipper
@@ -58,6 +59,34 @@ namespace MMG.Core.Testing.Integration.EFPersistence
             _repo.UnitOfWork.SaveChanges();
 
             Assert.AreEqual(ShipperPriorityEnum.Low, updatedShipper.PriorityLevel);
+        }
+
+        [Test]
+        public void InsertSupplier_UsingNullableStringEnumADT()
+        {
+            var supplier = new Supplier
+            {
+                Name = "nUnit Test",
+                Contact = new Contact
+                {
+                    Address = new Address
+                    {
+                        Street = "123 Abc Rd",
+                        City = "Springfield",
+                        PostalCode = "20850",
+                        Country = CountryEnum.USA
+                    },
+                    Title = "tester"
+                }
+            };
+
+            var insertedSupplier = _repo.Save(supplier);
+            Assert.True(insertedSupplier.Id > 0);
+
+            var supplierFromDB = _nwDB.SuppliersSet.SingleOrDefault(p => p.Id == insertedSupplier.Id);
+            Assert.IsNotNull(supplierFromDB);
+            Assert.AreEqual(CountryEnum.USA, supplierFromDB.Contact.Address.Country);
+            Assert.AreEqual("United States", supplierFromDB.Contact.Address.Country);
         }
 
         private static void initializeStorage()

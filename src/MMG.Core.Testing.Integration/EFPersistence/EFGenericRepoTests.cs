@@ -31,7 +31,7 @@ namespace MMG.Core.Testing.Integration.EFPersistence
         }
 
         [Test]
-        public void FetchShippersShouldMatch()
+        public void FetchShippers_ShouldMatch()
         {
             //ARRANGE
             var expected = _nwDB.ShippersSet.ToList();
@@ -43,6 +43,19 @@ namespace MMG.Core.Testing.Integration.EFPersistence
             CollectionAssert.AreEquivalent(expected, actual);
         }
 
+
+        [Test]
+        public void FetchSuppliersWithQuery_ShouldMatch()
+        {
+            //ARRANGE
+            var expected = _nwDB.SuppliersSet.Where(pSupplier => pSupplier.Id > 3).ToList();
+
+            //ACT
+            var actual = _repo.GetQuery<Supplier>(pSupplier => pSupplier.Id > 3).ToList();
+
+            //ASSERT
+            CollectionAssert.AreEquivalent(expected, actual);
+        }
 
         private static void initializeStorage()
         {

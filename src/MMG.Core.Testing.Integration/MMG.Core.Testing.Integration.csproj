@@ -57,6 +57,9 @@
     <Reference Include="EntityFramework">
       <HintPath>..\..\..\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="MMG.Common.Extensions35">
+      <HintPath>..\..\..\packages\MMG.Common.Extensions35.1.5.201.36\lib\net35\MMG.Common.Extensions35.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -84,15 +87,18 @@
     <Compile Include="EFPersistence\ADTMappingTests.cs" />
     <Compile Include="EFPersistence\DBMapping\AddressEFMapping.cs" />
     <Compile Include="EFPersistence\DBMapping\ContactEFMapping.cs" />
+    <Compile Include="EFPersistence\DBMapping\CountryEFMapping.cs" />
     <Compile Include="EFPersistence\DBMapping\CustomerEFMapping.cs" />
     <Compile Include="EFPersistence\DBMapping\ShipperEFMapping.cs" />
     <Compile Include="EFPersistence\DBMapping\ShipperPriorityEFMapping.cs" />
+    <Compile Include="EFPersistence\DBMapping\SupplierEFMapping.cs" />
     <Compile Include="EFPersistence\EFContextBuilderTests.cs" />
     <Compile Include="EFPersistence\EFContextManagerTests.cs" />
     <Compile Include="EFPersistence\EFGenericRepoTests.cs" />
     <Compile Include="Northwind\Address.cs" />
     <Compile Include="Northwind\Category.cs" />
     <Compile Include="Northwind\Contact.cs" />
+    <Compile Include="Northwind\CountryStringEnumADT.cs" />
     <Compile Include="Northwind\Customer.cs" />
     <Compile Include="Northwind\Employee.cs" />
     <Compile Include="Northwind\Northwind.DbContext.cs">

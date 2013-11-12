@@ -18,6 +18,7 @@ namespace MMG.Core.Testing.Integration.Northwind
             pModelBuilder.Configurations.Add(new AddressEFMapping());
             pModelBuilder.Configurations.Add(new ContactEFMapping());
             pModelBuilder.Configurations.Add(new ShipperPriorityEFMapping());
+            pModelBuilder.Configurations.Add(new CountryEFMapping());
         }
     }
 }
