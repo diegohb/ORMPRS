@@ -72,16 +72,9 @@ namespace MMG.Infra.EFPersistence
             if (((IObjectContextAdapter)DbContext).ObjectContext.TryGetObjectByKey(key, out originalItem))
             {
                 var entity = (TEntity) originalItem;
+
                 //this will eager-load related entities.
-                foreach (var expandPropertyName in pExpandPropertyNames)
-                {
-                    var expandProp = typeof (TEntity).GetProperty(expandPropertyName);
-                    var isGeneric = expandProp.PropertyType.IsGenericType;
-                    if (!isGeneric) //indicates its a list
-                        DbContext.Entry(entity).Reference(expandPropertyName).Load();
-                    else
-                        DbContext.Entry(entity).Collection(expandPropertyName).Load();
-                }
+                expandProperties(entity, pExpandPropertyNames);
 
                 return entity;
             }
@@ -317,6 +310,37 @@ namespace MMG.Infra.EFPersistence
                 throw new PersistenceException(string.Format("The mapping for entity type '{0}' can not be found.", className));
 
             return string.Format("{0}.{1}", objContext.DefaultContainerName, entitySetName);
+        }
+
+        /// <summary>
+        /// Will walk through a dot-seperated string of property names to load related entities (navigation properties) on a single object.
+        /// </summary>
+        /// <param name="pEntity">The entity to expand properties on.</param>
+        /// <param name="pExpandPropertyNames">List of properties to expand.</param>
+        private void expandProperties<TEntity>(TEntity pEntity, string[] pExpandPropertyNames) where TEntity : class
+        {
+            foreach (var expandPropertyName in pExpandPropertyNames)
+            {
+                if (expandPropertyName.Contains("."))
+                {
+                    var navPropName = expandPropertyName.Split('.')[0];
+                    var entity = pEntity.GetType().GetProperty(navPropName).GetValue(pEntity, null);
+                    expandProperties(entity, new[] { expandPropertyName.Substring(expandPropertyName.IndexOf('.') + 1) });
+                }
+                else
+                {
+                    var expandProp = pEntity.GetType().GetProperty(expandPropertyName);
+                    if (expandProp == null)
+                        return;
+
+                    var isGeneric = expandProp.PropertyType.IsGenericType;
+                    //TODO: need better way to determine if it is a nav prop.
+                    if (!isGeneric) 
+                        DbContext.Entry(pEntity).Reference(expandPropertyName).Load();
+                    else
+                        DbContext.Entry(pEntity).Collection(expandPropertyName).Load();
+                }
+            }
         }
 
         private DbContext DbContext
