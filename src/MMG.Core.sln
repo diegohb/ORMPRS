@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{EE4C01E6-2D83-4C29-BBA6-9A6D4FD678DC}"
 	GlobalSection(PlasticSccProperties) = preSolution
 		ControlledByPlastic = True
@@ -72,6 +74,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMG.Core.Testing.UnitTests"
 	EndGlobalSection
 EndProject
 Global
+	GlobalSection(CodealikeProperties) = postSolution
+		SolutionGuid = a33ea655-8e76-460c-a9d4-a9e2a4eafaef
+	EndGlobalSection
 	GlobalSection(PlasticSccProperties) = preSolution
 		ControlledByPlastic = True
 		SccProvider = Plastic SCM
@@ -114,12 +119,12 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{E015148C-1A1B-492F-A024-2C1F574AD202} = {BA95B12B-94A8-45B3-B0FE-96D3954BC150}
 		{43E019D8-B53D-4797-8EA1-4925F211B9CA} = {BA95B12B-94A8-45B3-B0FE-96D3954BC150}
-		{4CC61436-2A47-4F05-BC2E-2789DD57FFC6} = {BA95B12B-94A8-45B3-B0FE-96D3954BC150}
+		{E015148C-1A1B-492F-A024-2C1F574AD202} = {BA95B12B-94A8-45B3-B0FE-96D3954BC150}
 		{E8B8E922-308E-4FCE-9BAA-BBED6850E69D} = {B92F7C12-651B-4BB8-A242-50AE2629D092}
 		{2D946466-FB86-427D-87FC-F26B2518C7C9} = {B92F7C12-651B-4BB8-A242-50AE2629D092}
 		{D4BCF402-3DCC-4FB8-A3F0-E9D3B0FF5D5A} = {BD6387C4-D80B-4FBA-BF21-6FAEFB90C370}
+		{4CC61436-2A47-4F05-BC2E-2789DD57FFC6} = {BA95B12B-94A8-45B3-B0FE-96D3954BC150}
 		{B225E34D-3E94-4BFE-9DCF-28E17C044D3D} = {BD6387C4-D80B-4FBA-BF21-6FAEFB90C370}
 	EndGlobalSection
 EndGlobal
