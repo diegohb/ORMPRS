@@ -1,16 +1,19 @@
 ﻿// *************************************************
 // MMG.Core.Testing.Integration.OAContextManagerTests.cs
-// Last Modified: 08/31/2013 5:07 PM
+// Last Modified: 07/21/2014 6:39 PM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
+using System.Collections.Generic;
 using System.Linq;
 using MMG.Core.OAPersistence;
 using MMG.Core.Persistence;
 using MMG.Core.Persistence.Exceptions;
 using MMG.Core.Persistence.Impl;
 using MMG.Core.Testing.Integration.Northwind;
+using MMG.Core.Testing.Integration.OAPersistence.DBMapping;
 using NUnit.Framework;
+using Telerik.OpenAccess.Metadata.Fluent;
 
 namespace MMG.Core.Testing.Integration.OAPersistence
 {
@@ -26,6 +29,14 @@ namespace MMG.Core.Testing.Integration.OAPersistence
             /*Utility.DoTimedAction(() => configureSecondContext());
             Utility.DoTimedAction(() => confirmContextCountInStorage());*/
             Utility.DoTimedAction(() => confirmContextsAreSeparate());
+        }
+
+        public class EntitiesModelMetadataSource : FluentMetadataSource
+        {
+            protected override IList<MappingConfiguration> PrepareMapping()
+            {
+                return new MappingConfiguration[] {new CustomerOAMapping()};
+            }
         }
 
         private static void initializeStorage()
@@ -85,7 +96,6 @@ namespace MMG.Core.Testing.Integration.OAPersistence
 
             var bolidCustRepo2 = repo2.GetByKey<Customer>("BOLID");
             Assert.IsNotNull(bolidCustRepo2);
-            
 
             /*bolidCustRepo1.Contact.Address.Region = "Test";
             repo1.Update(bolidCustRepo1);
@@ -103,7 +113,5 @@ namespace MMG.Core.Testing.Integration.OAPersistence
             repo1.Update(bolidCustRepo1);
             repo1.UnitOfWork.SaveChanges();*/
         }
-
     }
-
 }
