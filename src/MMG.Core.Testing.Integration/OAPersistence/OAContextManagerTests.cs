@@ -33,9 +33,18 @@ namespace MMG.Core.Testing.Integration.OAPersistence
 
         public class EntitiesModelMetadataSource : FluentMetadataSource
         {
+
+            public MappingConfiguration[] MappingService
+            {
+                get
+                {
+                    return new MappingConfiguration[] { new CustomerOAMapping() };
+                }
+            }
+
             protected override IList<MappingConfiguration> PrepareMapping()
             {
-                return new MappingConfiguration[] {new CustomerOAMapping()};
+                return MappingService;
             }
         }
 
