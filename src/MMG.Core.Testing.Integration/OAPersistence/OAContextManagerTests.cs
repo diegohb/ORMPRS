@@ -26,8 +26,8 @@ namespace MMG.Core.Testing.Integration.OAPersistence
             Utility.DoTimedAction(() => initializeStorage());
             Utility.DoTimedAction(() => verifyInitStorageOnlyOnce());
             Utility.DoTimedAction(() => configureNorthwindContext());
-            /*Utility.DoTimedAction(() => configureSecondContext());
-            Utility.DoTimedAction(() => confirmContextCountInStorage());*/
+            Utility.DoTimedAction(() => configureSecondContext());
+            Utility.DoTimedAction(() => confirmContextCountInStorage());
             Utility.DoTimedAction(() => confirmContextsAreSeparate());
         }
 
