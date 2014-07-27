@@ -1,10 +1,9 @@
 // *************************************************
 // MMG.Core.Testing.Integration.PriorityTypeADT.cs
-// Last Modified: 11/12/2013 7:33 AM
+// Last Modified: 07/27/2014 5:10 PM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
-using System.ComponentModel.DataAnnotations.Schema;
 using MMG.Core.Model;
 using MMG.Core.Persistence;
 
@@ -17,7 +16,6 @@ namespace MMG.Core.Testing.Integration.Northwind
         Low = 3
     }
 
-    [ComplexType]
     public class PriorityTypeADT : NullableByteEnumADT<ShipperPriorityEnum>, IDbEntity
     {
         public PriorityTypeADT() {}

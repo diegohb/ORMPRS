@@ -33,5 +33,6 @@ namespace MMG.Core.Testing.Integration.OAPersistence.DBMapping
             HasProperty(p => p.Contact.Address.Country).HasFieldName("Country").HasLength(15);*/
         }
 
+        public string ConnectionStringName { get { return string.Empty; } }
     }
 }

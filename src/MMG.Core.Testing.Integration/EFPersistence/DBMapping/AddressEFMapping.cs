@@ -14,5 +14,7 @@ namespace MMG.Core.Testing.Integration.EFPersistence.DBMapping
             Property(p => p.PostalCode).HasColumnName("PostalCode").HasMaxLength(60);
             //Country mapped via ADT complex type config.
         }
+
+        public string ConnectionStringName { get { return string.Empty; } }
     }
 }

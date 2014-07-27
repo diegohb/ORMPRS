@@ -82,6 +82,7 @@ namespace MMG.Core.Testing.Integration.EFPersistence
             var bolidCustRepo1 = repo1.GetByKey<Customer>("BOLID");
             var bolidCustRepo1SameContext = repo1.GetByKey<Customer>("BOLID");
 
+            //the following would fail with 'MMG.Core.Persistence.Exceptions.PersistenceException : The mapping for entity type 'Customer' can not be found.' without the existence of CustomerEFMappingAlt mapping class.
             var bolidCustRepo2 = repo2.GetByKey<Customer>("BOLID");
             Assert.IsNotNull(bolidCustRepo2);
             Assert.IsNotNull(bolidCustRepo1);
