@@ -19,5 +19,7 @@ namespace MMG.Core.Testing.Integration.EFPersistence.DBMapping
             Property(p => p.Id).HasColumnName("CustomerID").HasMaxLength(5);
             Property(p => p.Name).HasColumnName("CompanyName").HasMaxLength(40).IsRequired();
         }
+
+        public virtual string ConnectionStringName { get { return Utility.NorthwindDBConnectionName; } }
     }
 }
