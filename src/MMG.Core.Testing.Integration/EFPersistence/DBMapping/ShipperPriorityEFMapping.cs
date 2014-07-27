@@ -16,5 +16,7 @@ namespace MMG.Core.Testing.Integration.EFPersistence.DBMapping
         {
             Property(p => p.Value).HasColumnName("Priority").IsOptional();
         }
+
+        public string ConnectionStringName { get { return string.Empty; } }
     }
 }

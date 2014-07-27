@@ -19,5 +19,7 @@ namespace MMG.Core.Testing.Integration.OAPersistence.DBMapping
             Property(p => p.PostalCode).HasColumnName("PostalCode").HasMaxLength(60);
             Property(p => p.Country).HasColumnName("Country").HasMaxLength(15);*/
         }
+
+        public string ConnectionStringName { get { return string.Empty; } }
     }
 }
