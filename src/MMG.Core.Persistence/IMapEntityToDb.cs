@@ -7,7 +7,7 @@
 namespace MMG.Core.Persistence
 {
     /// <summary>
-    /// marker interface for entity mappers/configuration classes
+    /// Marker interface for entity mappers/configuration classes
     /// </summary>
     public interface IMapEntityToDb
     {
@@ -21,7 +21,7 @@ namespace MMG.Core.Persistence
     }
 
     /// <summary>
-    /// marker interface for entity mappers/configuration classes
+    /// Marker interface for entity mappers/configuration classes
     /// </summary>
     public interface IMapEntityToDb<TEntity> : IMapEntityToDb
         where TEntity : IDbEntity {}
