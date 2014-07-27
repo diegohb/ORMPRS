@@ -114,10 +114,15 @@ namespace MMG.Infra.EFPersistence
                         !type.GetInterfaces().Contains(typeof (IMapEntityToDb))
                         || (!isMappingClass(type.BaseType))) continue;
                     
-                    hasMappingClass = true;
                     // http://areaofinterest.wordpress.com/2010/12/08/dynamically-load-entity-configurations-in-ef-codefirst-ctp5/
-                    dynamic configurationInstance = Activator.CreateInstance(type);
-                    Configurations.Add(configurationInstance);
+                    dynamic mappingInstance = Activator.CreateInstance(type);
+
+                    var configuredConnectionName = ((IMapEntityToDb)mappingInstance).ConnectionStringName;
+                    if(!string.IsNullOrEmpty(configuredConnectionName) && !_cnStringSettings.Name.Equals(configuredConnectionName, StringComparison.InvariantCultureIgnoreCase))
+                        continue;
+
+                    hasMappingClass = true;
+                    Configurations.Add(mappingInstance);
                 }
             }
 
