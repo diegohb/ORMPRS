@@ -89,6 +89,7 @@
     <Compile Include="EFPersistence\DBMapping\ContactEFMapping.cs" />
     <Compile Include="EFPersistence\DBMapping\CountryEFMapping.cs" />
     <Compile Include="EFPersistence\DBMapping\CustomerEFMapping.cs" />
+    <Compile Include="EFPersistence\DBMapping\CustomerEFMappingAlt.cs" />
     <Compile Include="EFPersistence\DBMapping\ShipperEFMapping.cs" />
     <Compile Include="EFPersistence\DBMapping\ShipperPriorityEFMapping.cs" />
     <Compile Include="EFPersistence\DBMapping\SupplierEFMapping.cs" />

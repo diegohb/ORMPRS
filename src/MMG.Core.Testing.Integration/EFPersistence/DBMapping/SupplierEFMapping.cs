@@ -17,5 +17,7 @@ namespace MMG.Core.Testing.Integration.EFPersistence.DBMapping
             ToTable("Suppliers");
             HasKey(p => p.Id);
         }
+
+        public string ConnectionStringName { get { return string.Empty; } }
     }
 }
