@@ -22,5 +22,7 @@ namespace MMG.Core.Testing.Integration.EFPersistence.DBMapping
             Property(p => p.Name).HasColumnName("CompanyName").HasMaxLength(40).IsRequired();
             Property(p => p.PhoneNumber).HasColumnName("Phone").HasMaxLength(24).IsOptional();
         }
+
+        public string ConnectionStringName { get { return string.Empty; } }
     }
 }

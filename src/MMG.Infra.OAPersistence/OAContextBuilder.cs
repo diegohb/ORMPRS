@@ -87,8 +87,14 @@ namespace MMG.Core.OAPersistence
                               && pType.GetInterfaces().Contains(typeof(IMapEntityToDb))
                               && isMappingClass(pType.BaseType)))
                 {
-                    foundMappingClass = true;
+                    
                     dynamic mappingInstance = Activator.CreateInstance(type);
+
+                    var configuredConnectionName = ((IMapEntityToDb)mappingInstance).ConnectionStringName;
+                    if (!string.IsNullOrEmpty(configuredConnectionName) && !_connectionStringName.Equals(configuredConnectionName, StringComparison.InvariantCultureIgnoreCase))
+                        continue;
+                    
+                    foundMappingClass = true;
                     configurations.Add(mappingInstance);
                 }
             }
