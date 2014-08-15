@@ -57,6 +57,8 @@ namespace MMG.Infra.EFPersistence
             ctx.ContextOptions.LazyLoadingEnabled = _contextConfig.LazyLoadingEnabled;
             ctx.ContextOptions.ProxyCreationEnabled = _contextConfig.ProxyCreationEnabled;
             ctx.ContextOptions.UseLegacyPreserveChangesBehavior = _contextConfig.UseLegacyPreserveChangesBehavior;
+            ctx.ContextOptions.UseCSharpNullComparisonBehavior = _contextConfig.UseCSharpNullComparisonBehavior;
+            ctx.ContextOptions.UseConsistentNullReferenceBehavior = _contextConfig.UseConsistentNullReferenceBehavior;
 
             if (!ctx.DatabaseExists())
             {
