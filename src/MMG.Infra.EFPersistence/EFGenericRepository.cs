@@ -1,24 +1,23 @@
 ﻿// *************************************************
 // MMG.Infra.EFPersistence.EFGenericRepository.cs
-// Last Modified: 08/29/2013 4:53 PM
+// Last Modified: 08/15/2014 1:41 AM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
-using System.Linq.Expressions;
-using MMG.Core.Persistence;
-using MMG.Core.Persistence.Exceptions;
-using MMG.Core.Query;
-
 namespace MMG.Infra.EFPersistence
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using Core.Persistence;
+    using Core.Persistence.Exceptions;
+    using Core.Query;
 
     /// <summary>
     /// Generic repository
@@ -33,9 +32,7 @@ namespace MMG.Infra.EFPersistence
         /// Initializes a new instance of the <see cref="Repository&lt;TEntity&gt;"/> class.
         /// </summary>
         public EFGenericRepository()
-            : this(string.Empty)
-        {
-        }
+            : this(string.Empty) {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericRepository&lt;TEntity&gt;"/> class.
@@ -43,7 +40,7 @@ namespace MMG.Infra.EFPersistence
         /// <param name="connectionStringName">Name of the connection string.</param>
         public EFGenericRepository(string connectionStringName)
         {
-            this._connectionStringName = connectionStringName;
+            _connectionStringName = connectionStringName;
         }
 
         /// <summary>
@@ -64,13 +61,13 @@ namespace MMG.Infra.EFPersistence
             _context = new DbContext(context, true);
         }
 
-        public TEntity GetByKey<TEntity>(object keyValue, params string[] pExpandPropertyNames) 
+        public TEntity GetByKey<TEntity>(object keyValue, params string[] pExpandPropertyNames)
             where TEntity : class
         {
             EntityKey key = getEntityKey<TEntity>(keyValue);
 
             object originalItem;
-            if (((IObjectContextAdapter)DbContext).ObjectContext.TryGetObjectByKey(key, out originalItem))
+            if (((IObjectContextAdapter) DbContext).ObjectContext.TryGetObjectByKey(key, out originalItem))
             {
                 var entity = (TEntity) originalItem;
 
@@ -109,41 +106,59 @@ namespace MMG.Infra.EFPersistence
             return objectQuery;
         }
 
-        public IQueryable<TEntity> GetQuery<TEntity>(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] pExpandPropertySelectors) where TEntity : class
+        public IQueryable<TEntity> GetQuery<TEntity>
+            (Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] pExpandPropertySelectors) where TEntity : class
         {
             return GetQuery(pExpandPropertySelectors).Where(predicate);
         }
 
-        public IQueryable<TEntity> GetQuery<TEntity>(ISpecification<TEntity> criteria, params Expression<Func<TEntity, object>>[] pExpandPropertySelectors) where TEntity : class
+        public IQueryable<TEntity> GetQuery<TEntity>
+            (ISpecification<TEntity> criteria, params Expression<Func<TEntity, object>>[] pExpandPropertySelectors) where TEntity : class
         {
             return criteria.SatisfyingEntitiesFrom(GetQuery(pExpandPropertySelectors));
         }
 
-        public IEnumerable<TEntity> Get<TEntity, TOrderBy>(Expression<Func<TEntity, TOrderBy>> orderBy, int pageIndex, int pageSize, SortOrder sortOrder = SortOrder.Ascending) where TEntity : class
+        public IEnumerable<TEntity> Get<TEntity, TOrderBy>
+            (Expression<Func<TEntity, TOrderBy>> orderBy, int pageIndex, int pageSize, SortOrder sortOrder = SortOrder.Ascending)
+            where TEntity : class
         {
             if (sortOrder == SortOrder.Ascending)
             {
-                return GetQuery<TEntity>().OrderBy(orderBy).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsEnumerable();
+                return GetQuery<TEntity>().OrderBy(orderBy).Skip((pageIndex - 1)*pageSize).Take(pageSize).AsEnumerable();
             }
-            return GetQuery<TEntity>().OrderByDescending(orderBy).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsEnumerable();
+            return GetQuery<TEntity>().OrderByDescending(orderBy).Skip((pageIndex - 1)*pageSize).Take(pageSize).AsEnumerable();
         }
 
-        public IEnumerable<TEntity> Get<TEntity, TOrderBy>(Expression<Func<TEntity, bool>> criteria, Expression<Func<TEntity, TOrderBy>> orderBy, int pageIndex, int pageSize, SortOrder sortOrder = SortOrder.Ascending) where TEntity : class
+        public IEnumerable<TEntity> Get<TEntity, TOrderBy>
+            (Expression<Func<TEntity, bool>> criteria, Expression<Func<TEntity, TOrderBy>> orderBy, int pageIndex, int pageSize,
+                SortOrder sortOrder = SortOrder.Ascending) where TEntity : class
         {
             if (sortOrder == SortOrder.Ascending)
             {
-                return GetQuery<TEntity>(criteria).OrderBy(orderBy).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsEnumerable();
+                return GetQuery<TEntity>(criteria).OrderBy(orderBy).Skip((pageIndex - 1)*pageSize).Take(pageSize).AsEnumerable();
             }
-            return GetQuery<TEntity>(criteria).OrderByDescending(orderBy).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsEnumerable();
+            return GetQuery<TEntity>(criteria).OrderByDescending(orderBy).Skip((pageIndex - 1)*pageSize).Take(pageSize).AsEnumerable();
         }
 
-        public IEnumerable<TEntity> Get<TEntity, TOrderBy>(ISpecification<TEntity> specification, Expression<Func<TEntity, TOrderBy>> orderBy, int pageIndex, int pageSize, SortOrder sortOrder = SortOrder.Ascending) where TEntity : class
+        public IEnumerable<TEntity> Get<TEntity, TOrderBy>
+            (ISpecification<TEntity> specification, Expression<Func<TEntity, TOrderBy>> orderBy, int pageIndex, int pageSize,
+                SortOrder sortOrder = SortOrder.Ascending) where TEntity : class
         {
             if (sortOrder == SortOrder.Ascending)
             {
-                return specification.SatisfyingEntitiesFrom(GetQuery<TEntity>()).OrderBy(orderBy).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsEnumerable();
+                return
+                    specification.SatisfyingEntitiesFrom(GetQuery<TEntity>())
+                        .OrderBy(orderBy)
+                        .Skip((pageIndex - 1)*pageSize)
+                        .Take(pageSize)
+                        .AsEnumerable();
             }
-            return specification.SatisfyingEntitiesFrom(GetQuery<TEntity>()).OrderByDescending(orderBy).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsEnumerable();
+            return
+                specification.SatisfyingEntitiesFrom(GetQuery<TEntity>())
+                    .OrderByDescending(orderBy)
+                    .Skip((pageIndex - 1)*pageSize)
+                    .Take(pageSize)
+                    .AsEnumerable();
         }
 
         public TEntity Single<TEntity>(Expression<Func<TEntity, bool>> criteria) where TEntity : class
@@ -240,10 +255,10 @@ namespace MMG.Infra.EFPersistence
             var fqen = getEntityName<TEntity>();
 
             object originalItem;
-            EntityKey key = ((IObjectContextAdapter)DbContext).ObjectContext.CreateEntityKey(fqen, entity);
-            if (((IObjectContextAdapter)DbContext).ObjectContext.TryGetObjectByKey(key, out originalItem))
+            EntityKey key = ((IObjectContextAdapter) DbContext).ObjectContext.CreateEntityKey(fqen, entity);
+            if (((IObjectContextAdapter) DbContext).ObjectContext.TryGetObjectByKey(key, out originalItem))
             {
-                ((IObjectContextAdapter)DbContext).ObjectContext.ApplyCurrentValues(key.EntitySetName, entity);
+                ((IObjectContextAdapter) DbContext).ObjectContext.ApplyCurrentValues(key.EntitySetName, entity);
             }
             return entity;
         }
@@ -291,21 +306,21 @@ namespace MMG.Infra.EFPersistence
         private EntityKey getEntityKey<TEntity>(object keyValue) where TEntity : class
         {
             var entitySetName = getEntityName<TEntity>();
-            var objectSet = ((IObjectContextAdapter)DbContext).ObjectContext.CreateObjectSet<TEntity>();
+            var objectSet = ((IObjectContextAdapter) DbContext).ObjectContext.CreateObjectSet<TEntity>();
             var keyPropertyName = objectSet.EntitySet.ElementType.KeyMembers[0].ToString();
-            var entityKey = new EntityKey(entitySetName, new[] { new EntityKeyMember(keyPropertyName, keyValue) });
+            var entityKey = new EntityKey(entitySetName, new[] {new EntityKeyMember(keyPropertyName, keyValue)});
             return entityKey;
         }
 
         private string getEntityName<TEntity>() where TEntity : class
         {
             // original - http://huyrua.wordpress.com/2011/04/13/entity-framework-4-poco-repository-and-specification-pattern-upgraded-to-ef-4-1/#comment-688
-            var className = typeof(TEntity).Name;
-            var objContext = ((IObjectContextAdapter)DbContext).ObjectContext;
+            var className = typeof (TEntity).Name;
+            var objContext = ((IObjectContextAdapter) DbContext).ObjectContext;
             var container = objContext.MetadataWorkspace.GetEntityContainer(objContext.DefaultContainerName, DataSpace.CSpace);
             var entitySetName = container.BaseEntitySets
-                                         .Where(pMeta => pMeta.ElementType.Name == className)
-                                         .Select(pMeta => pMeta.Name).FirstOrDefault();
+                .Where(pMeta => pMeta.ElementType.Name == className)
+                .Select(pMeta => pMeta.Name).FirstOrDefault();
 
             if (entitySetName == null)
                 throw new PersistenceException(string.Format("The mapping for entity type '{0}' can not be found.", className));
@@ -326,7 +341,7 @@ namespace MMG.Infra.EFPersistence
                 {
                     var navPropName = expandPropertyName.Split('.')[0];
                     var entity = pEntity.GetType().GetProperty(navPropName).GetValue(pEntity, null);
-                    expandProperties(entity, new[] { expandPropertyName.Substring(expandPropertyName.IndexOf('.') + 1) });
+                    expandProperties(entity, new[] {expandPropertyName.Substring(expandPropertyName.IndexOf('.') + 1)});
                 }
                 else
                 {
@@ -336,7 +351,7 @@ namespace MMG.Infra.EFPersistence
 
                     var isGeneric = expandProp.PropertyType.IsGenericType;
                     //TODO: need better way to determine if it is a nav prop.
-                    if (!isGeneric) 
+                    if (!isGeneric)
                         DbContext.Entry(pEntity).Reference(expandPropertyName).Load();
                     else
                         DbContext.Entry(pEntity).Collection(expandPropertyName).Load();
@@ -353,9 +368,9 @@ namespace MMG.Infra.EFPersistence
                     if (_connectionStringName == string.Empty)
                         _context = (DbContext) EFContextManager.Instance.Current;
                     else
-                        _context = (DbContext) EFContextManager.Instance.CurrentFor(this._connectionStringName);
+                        _context = (DbContext) EFContextManager.Instance.CurrentFor(_connectionStringName);
                 }
-                return this._context;
+                return _context;
             }
         }
 
@@ -364,7 +379,7 @@ namespace MMG.Infra.EFPersistence
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-        
+
         protected virtual void Dispose(bool pDisposing)
         {
             if (!pDisposing) return;
@@ -374,5 +389,4 @@ namespace MMG.Infra.EFPersistence
             _context = null;
         }
     }
-
 }
