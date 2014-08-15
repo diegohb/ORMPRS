@@ -1,20 +1,21 @@
 ﻿// *************************************************
 // MMG.Infra.EFPersistence.EFUnitOfWork.cs
-// Last Modified: 11/05/2013 6:45 PM
+// Last Modified: 08/15/2014 1:38 AM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
-using System;
-using System.Data;
-using System.Data.Common;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Data.Objects;
-using MMG.Core.Persistence;
-using MMG.Core.Persistence.Exceptions;
-
 namespace MMG.Infra.EFPersistence
 {
+    using System;
+    using System.Data;
+    using System.Data.Common;
+    using System.Data.Entity;
+    using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure;
+    using Core.Persistence;
+    using Core.Persistence.Exceptions;
+
     internal class EFUnitOfWork : IUnitOfWork
     {
         private DbTransaction _transaction;
