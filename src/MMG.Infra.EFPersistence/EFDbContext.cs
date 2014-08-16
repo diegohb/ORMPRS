@@ -1,16 +1,16 @@
 ﻿// *************************************************
 // MMG.Infra.EFPersistence.EFDbContext.cs
-// Last Modified: 08/30/2013 1:24 PM
+// Last Modified: 08/15/2014 1:38 AM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
-using System.Data;
-using System.Data.Entity;
-using System.Data.Objects;
-using MMG.Core.Persistence;
-
 namespace MMG.Infra.EFPersistence
 {
+    using System.Data;
+    using System.Data.Entity;
+    using System.Data.Entity.Core.Objects;
+    using Core.Persistence;
+
     /// <summary>
     /// Abstract class that simply wraps the EntityFramework DbContext object and tags the object with <see cref="IDbContext"/>.
     /// </summary>
@@ -25,7 +25,6 @@ namespace MMG.Infra.EFPersistence
             : base(pObjectContext, pDBContextOwnsObjectContext) {}
 
         #endregion
-
 
         public virtual void Add<TEntity>(TEntity pEntity) where TEntity : class, IDbEntity
         {

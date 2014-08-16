@@ -1,31 +1,31 @@
 ﻿// *************************************************
 // MMG.Infra.EFPersistence.EFContextBuilder.cs
-// Last Modified: 08/29/2013 3:03 PM
+// Last Modified: 08/15/2014 1:38 AM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data.Common;
-using System.Data.Entity;
-using System.Data.Entity.ModelConfiguration;
-using System.Data.Objects;
-using System.IO;
-using System.Reflection;
-using MMG.Core.Persistence;
-using System.Linq;
-using MMG.Core.Persistence.Exceptions;
-
 namespace MMG.Infra.EFPersistence
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.Data.Common;
+    using System.Data.Entity;
+    using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.ModelConfiguration;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using Core.Persistence;
+    using Core.Persistence.Exceptions;
+
     public class EFContextBuilder<TContext> : DbModelBuilder, IDbContextBuilder<TContext>
         where TContext : EFDbContext, IDbContext
     {
         private readonly EFContextConfiguration _contextConfig;
         private readonly DbProviderFactory _factory;
         private readonly ConnectionStringSettings _cnStringSettings;
-        
+
 
         public EFContextBuilder(string pConnectionStringName, EFContextConfiguration pContextConfig)
         {
@@ -57,6 +57,8 @@ namespace MMG.Infra.EFPersistence
             ctx.ContextOptions.LazyLoadingEnabled = _contextConfig.LazyLoadingEnabled;
             ctx.ContextOptions.ProxyCreationEnabled = _contextConfig.ProxyCreationEnabled;
             ctx.ContextOptions.UseLegacyPreserveChangesBehavior = _contextConfig.UseLegacyPreserveChangesBehavior;
+            ctx.ContextOptions.UseCSharpNullComparisonBehavior = _contextConfig.UseCSharpNullComparisonBehavior;
+            ctx.ContextOptions.UseConsistentNullReferenceBehavior = _contextConfig.UseConsistentNullReferenceBehavior;
 
             if (!ctx.DatabaseExists())
             {
@@ -85,9 +87,8 @@ namespace MMG.Infra.EFPersistence
             var hasMappingClass = false;
             foreach (var mappingAssembly in pMappingAssemblies)
             {
-
                 Assembly asm;
-                
+
                 try
                 {
                     asm = AppDomain.CurrentDomain.Load(mappingAssembly);
@@ -101,10 +102,11 @@ namespace MMG.Infra.EFPersistence
                     catch (Exception e)
                     {
                         throw new PersistenceException
-                            (string.Format("Unable to find mapping assembly '{0}'. You must provide an assembly display name or a full path to a dll.", mappingAssembly), e);
+                            (string.Format
+                                ("Unable to find mapping assembly '{0}'. You must provide an assembly display name or a full path to a dll.",
+                                    mappingAssembly), e);
                     }
                 }
-                
 
                 foreach (var type in asm.GetTypes())
                 {
@@ -113,12 +115,13 @@ namespace MMG.Infra.EFPersistence
                     if (type.BaseType == null ||
                         !type.GetInterfaces().Contains(typeof (IMapEntityToDb))
                         || (!isMappingClass(type.BaseType))) continue;
-                    
+
                     // http://areaofinterest.wordpress.com/2010/12/08/dynamically-load-entity-configurations-in-ef-codefirst-ctp5/
                     dynamic mappingInstance = Activator.CreateInstance(type);
 
-                    var configuredConnectionName = ((IMapEntityToDb)mappingInstance).ConnectionStringName;
-                    if(!string.IsNullOrEmpty(configuredConnectionName) && !_cnStringSettings.Name.Equals(configuredConnectionName, StringComparison.InvariantCultureIgnoreCase))
+                    var configuredConnectionName = ((IMapEntityToDb) mappingInstance).ConnectionStringName;
+                    if (!string.IsNullOrEmpty(configuredConnectionName)
+                        && !_cnStringSettings.Name.Equals(configuredConnectionName, StringComparison.InvariantCultureIgnoreCase))
                         continue;
 
                     hasMappingClass = true;
@@ -141,9 +144,9 @@ namespace MMG.Infra.EFPersistence
         {
             var baseType = typeof (EntityTypeConfiguration<>);
             var complexConfigType = typeof (ComplexTypeConfiguration<>);
-            
+
             if (pMappingType.IsGenericType
-                 && (pMappingType.GetGenericTypeDefinition() == baseType || pMappingType.GetGenericTypeDefinition() == complexConfigType))
+                && (pMappingType.GetGenericTypeDefinition() == baseType || pMappingType.GetGenericTypeDefinition() == complexConfigType))
                 return true;
 
             if ((pMappingType.BaseType != null) &&
