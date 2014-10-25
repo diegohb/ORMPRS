@@ -48,8 +48,10 @@
     <Compile Include="IDbEntity.cs" />
     <Compile Include="IDbContext.cs" />
     <Compile Include="IMapEntityToDb.cs" />
+    <Compile Include="Impl\ConnectionStringProvider.cs" />
     <Compile Include="Impl\SimpleDbContextStorage.cs" />
     <Compile Include="Impl\WebDbContextStorageBase.cs" />
+    <Compile Include="IProvideConnectionString.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
