@@ -45,6 +45,11 @@ namespace MMG.Infra.EFPersistence
             _connectionStringName = pConnectionStringName;
         }
 
+        public EFGenericRepository(IProvideConnectionString pConnectionStringProvider)
+        {
+            _connectionStringName = pConnectionStringProvider.ConnectionString;
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EFGenericRepository"/> class.
         /// </summary>
