@@ -10,6 +10,9 @@ using NUnit.Framework.Constraints;
 
 namespace MMG.Core.Testing.Integration.EFPersistence
 {
+    using System.Reflection;
+    using Common.Extensions;
+
     [TestFixture]
     public class EFGenericRepoTests
     {
@@ -29,6 +32,17 @@ namespace MMG.Core.Testing.Integration.EFPersistence
         {
             _nwDB.ShippersSet.Where(p => p.Name.Contains("nUnit")).ToList().ForEach(pShipper => _nwDB.ShippersSet.Remove(pShipper));
             _nwDB.SaveChanges();
+        }
+
+        [Test]
+        public void ConnectionStringConstructor_ShouldInitialize()
+        {
+            const string connectionString = "test_name";
+            var cnProvider = new ConnectionStringProvider(connectionString);
+            Assert.IsNotNull(cnProvider);
+            Assert.AreEqual(connectionString,cnProvider.ConnectionString);
+            var testRepo = new EFGenericRepository(cnProvider);
+            Assert.IsNotNull(testRepo);
         }
 
         [Test]
