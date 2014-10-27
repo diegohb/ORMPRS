@@ -14,6 +14,8 @@ using Telerik.OpenAccess.Metadata.Fluent;
 
 namespace MMG.Core.OAPersistence
 {
+    using Persistence.Exceptions;
+
     public class OAContextBuilder<TContext> : IDbContextBuilder<TContext>
     where TContext : OADbContext, IDbContext
     {
@@ -75,8 +77,13 @@ namespace MMG.Core.OAPersistence
             }
         }
 
-        private IEnumerable<MappingConfiguration> getMappingConfigurations(IEnumerable<string> pMappingAssemblies)
+        private IEnumerable<MappingConfiguration> getMappingConfigurations(ICollection<string> pMappingAssemblies)
         {
+            if (pMappingAssemblies == null || pMappingAssemblies.Count == 0)
+            {
+                throw new PersistenceConfigurationException("You must specify at least one mapping assembly to the context builder.");
+            }
+
             var foundMappingClass = false;
             var assemblies = pMappingAssemblies.Select(Assembly.Load);
             var configurations = new List<MappingConfiguration>();
@@ -100,7 +107,7 @@ namespace MMG.Core.OAPersistence
             }
 
             if (!foundMappingClass)
-                throw new ArgumentException("No mapping class found!");
+                throw new PersistenceConfigurationException("No mapping classes found in any assembly provided!");
 
             return configurations;
         }

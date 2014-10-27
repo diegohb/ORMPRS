@@ -1,6 +1,6 @@
 ﻿// *************************************************
 // MMG.Infra.EFPersistence.EFContextBuilder.cs
-// Last Modified: 08/15/2014 1:38 AM
+// Last Modified: 10/27/2014 7:33 PM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
@@ -32,7 +32,7 @@ namespace MMG.Infra.EFPersistence
             _contextConfig = pContextConfig;
             _cnStringSettings = ConfigurationManager.ConnectionStrings[pConnectionStringName];
             if (_cnStringSettings == null)
-                throw new PersistenceException
+                throw new PersistenceConfigurationException
                     (string.Format("Unable to load connection settings for connection string '{0}'.", pConnectionStringName));
 
             _factory = DbProviderFactories.GetFactory(_cnStringSettings.ProviderName);
@@ -81,7 +81,7 @@ namespace MMG.Infra.EFPersistence
         {
             if (pMappingAssemblies == null || pMappingAssemblies.Count == 0)
             {
-                throw new ArgumentNullException("pMappingAssemblies", "You must specify at least one mapping assembly");
+                throw new PersistenceConfigurationException("You must specify at least one mapping assembly to the context builder.");
             }
 
             var hasMappingClass = false;
@@ -101,7 +101,7 @@ namespace MMG.Infra.EFPersistence
                     }
                     catch (Exception e)
                     {
-                        throw new PersistenceException
+                        throw new PersistenceConfigurationException
                             (string.Format
                                 ("Unable to find mapping assembly '{0}'. You must provide an assembly display name or a full path to a dll.",
                                     mappingAssembly), e);
@@ -130,7 +130,7 @@ namespace MMG.Infra.EFPersistence
             }
 
             if (!hasMappingClass)
-                throw new ArgumentException("No mapping class found!");
+                throw new PersistenceConfigurationException("No mapping classes found in any assembly provided!");
         }
 
         /// <summary>
