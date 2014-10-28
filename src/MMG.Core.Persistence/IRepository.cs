@@ -48,7 +48,7 @@ namespace MMG.Core.Persistence
         /// <param name="pExpandPropertySelectors">Names of the properties to expand.</param>
         /// <returns></returns>
         IQueryable<TEntity> GetQuery<TEntity>(ISpecification<TEntity> criteria, params Expression<Func<TEntity, object>>[] pExpandPropertySelectors) where TEntity : class;
-
+        
         /// <summary>
         /// Gets one entity based on matching criteria
         /// </summary>
@@ -171,6 +171,14 @@ namespace MMG.Core.Persistence
         /// <param name="criteria">The criteria.</param>
         /// <returns></returns>
         TEntity FindOne<TEntity>(Expression<Func<TEntity, bool>> criteria) where TEntity : class;
+
+        /// <summary>
+        /// Gets the current object in-store from the calculated entity keys in the entity provided. Useful to determine if an update is necessary.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="pEntityInstance">An instance of the object to fetch. Used to find entity key(s).</param>
+        /// <returns>The original object in cache. Null if not found.</returns>
+        TEntity GetOriginal<TEntity>(object pEntityInstance) where TEntity : class;
 
         /// <summary>
         /// Gets all.
