@@ -202,6 +202,16 @@ namespace MMG.Core.OAPersistence
             }
         }
 
+        public TEntity GetOriginal<TEntity>(object pEntityInstance) where TEntity : class
+        {
+            //NOTE: reference http://docs.telerik.com/data-access/feature-reference/api/objectkey-api/data-access-tasks-object-key-api-obtain-key
+            var objKey = DbContext.CreateObjectKey(pEntityInstance);
+            if (objKey == null)
+                return null;
+
+            return DbContext.GetObjectByKey<TEntity>(objKey);
+        }
+
         public IEnumerable<TEntity> GetAll<TEntity>() where TEntity : class
         {
             return GetQuery<TEntity>().AsEnumerable();

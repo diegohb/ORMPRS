@@ -238,6 +238,20 @@ namespace MMG.Infra.EFPersistence
             }
         }
 
+        public TEntity GetOriginal<TEntity>(object pEntityInstance) where TEntity : class
+        {
+             var fqen = getEntityName<TEntity>();
+
+            object existingItem;
+            var key = ((IObjectContextAdapter)DbContext).ObjectContext.CreateEntityKey(fqen, pEntityInstance);
+            if (((IObjectContextAdapter) DbContext).ObjectContext.TryGetObjectByKey(key, out existingItem))
+            {
+                return (TEntity)existingItem;
+            }
+
+            return null;
+        }
+
         public IEnumerable<TEntity> GetAll<TEntity>() where TEntity : class
         {
             return GetQuery<TEntity>().AsEnumerable();
