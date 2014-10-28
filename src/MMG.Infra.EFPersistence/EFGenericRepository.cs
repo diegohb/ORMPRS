@@ -1,6 +1,6 @@
 ﻿// *************************************************
 // MMG.Infra.EFPersistence.EFGenericRepository.cs
-// Last Modified: 08/15/2014 1:41 AM
+// Last Modified: 10/27/2014 8:42 PM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
@@ -28,38 +28,53 @@ namespace MMG.Infra.EFPersistence
         private DbContext _context;
         private IUnitOfWork _unitOfWork;
 
+        #region Constructors
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="Repository&lt;TEntity&gt;"/> class.
+        /// Initializes a new instance of the <see cref="EFGenericRepository"/> class.
         /// </summary>
         public EFGenericRepository()
             : this(string.Empty) {}
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenericRepository&lt;TEntity&gt;"/> class.
+        /// Initializes a new instance of the <see cref="EFGenericRepository"/> class.
         /// </summary>
-        /// <param name="connectionStringName">Name of the connection string.</param>
-        public EFGenericRepository(string connectionStringName)
+        /// <param name="pConnectionStringName">Name of the connection string.</param>
+        public EFGenericRepository(string pConnectionStringName)
         {
-            _connectionStringName = connectionStringName;
+            _connectionStringName = pConnectionStringName;
+        }
+
+        public EFGenericRepository(IProvideConnectionString pConnectionStringProvider)
+        {
+            _connectionStringName = pConnectionStringProvider.ConnectionString;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenericRepository&lt;TEntity&gt;"/> class.
+        /// Initializes a new instance of the <see cref="EFGenericRepository"/> class.
         /// </summary>
-        /// <param name="context">The context.</param>
-        public EFGenericRepository(DbContext context)
+        /// <param name="pContext">The context.</param>
+        /// <exception cref="System.ArgumentNullException">context</exception>
+        public EFGenericRepository(DbContext pContext)
         {
-            if (context == null)
-                throw new ArgumentNullException("context");
-            _context = context;
+            if (pContext == null)
+                throw new ArgumentNullException("pContext");
+            _context = pContext;
         }
 
-        public EFGenericRepository(ObjectContext context)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EFGenericRepository"/> class.
+        /// </summary>
+        /// <param name="pContext">The context.</param>
+        /// <exception cref="System.ArgumentNullException">context</exception>
+        public EFGenericRepository(ObjectContext pContext)
         {
-            if (context == null)
-                throw new ArgumentNullException("context");
-            _context = new DbContext(context, true);
+            if (pContext == null)
+                throw new ArgumentNullException("pContext");
+            _context = new DbContext(pContext, true);
         }
+
+        #endregion
 
         public TEntity GetByKey<TEntity>(object keyValue, params string[] pExpandPropertyNames)
             where TEntity : class
@@ -236,6 +251,20 @@ namespace MMG.Infra.EFPersistence
             {
                 Delete<TEntity>(record);
             }
+        }
+
+        public TEntity GetOriginal<TEntity>(object pEntityInstance) where TEntity : class
+        {
+            var fqen = getEntityName<TEntity>();
+
+            object existingItem;
+            var key = ((IObjectContextAdapter) DbContext).ObjectContext.CreateEntityKey(fqen, pEntityInstance);
+            if (((IObjectContextAdapter) DbContext).ObjectContext.TryGetObjectByKey(key, out existingItem))
+            {
+                return (TEntity) existingItem;
+            }
+
+            return null;
         }
 
         public IEnumerable<TEntity> GetAll<TEntity>() where TEntity : class

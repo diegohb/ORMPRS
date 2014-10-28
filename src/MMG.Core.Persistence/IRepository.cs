@@ -1,17 +1,17 @@
 ﻿// *************************************************
 // MMG.Core.Persistence.IRepository.cs
-// Last Modified: 08/29/2013 12:13 PM
+// Last Modified: 10/27/2014 8:42 PM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using MMG.Core.Query;
-
 namespace MMG.Core.Persistence
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using Query;
+
     public interface IRepository
     {
         /// <summary>
@@ -38,7 +38,8 @@ namespace MMG.Core.Persistence
         /// <param name="predicate">The predicate.</param>
         /// <param name="pExpandPropertySelectors">Names of the properties to expand.</param>
         /// <returns></returns>
-        IQueryable<TEntity> GetQuery<TEntity>(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] pExpandPropertySelectors) where TEntity : class;
+        IQueryable<TEntity> GetQuery<TEntity>
+            (Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] pExpandPropertySelectors) where TEntity : class;
 
         /// <summary>
         /// Gets the query.
@@ -47,7 +48,8 @@ namespace MMG.Core.Persistence
         /// <param name="criteria">The criteria.</param>
         /// <param name="pExpandPropertySelectors">Names of the properties to expand.</param>
         /// <returns></returns>
-        IQueryable<TEntity> GetQuery<TEntity>(ISpecification<TEntity> criteria, params Expression<Func<TEntity, object>>[] pExpandPropertySelectors) where TEntity : class;
+        IQueryable<TEntity> GetQuery<TEntity>(ISpecification<TEntity> criteria, params Expression<Func<TEntity, object>>[] pExpandPropertySelectors)
+            where TEntity : class;
 
         /// <summary>
         /// Gets one entity based on matching criteria
@@ -173,6 +175,14 @@ namespace MMG.Core.Persistence
         TEntity FindOne<TEntity>(Expression<Func<TEntity, bool>> criteria) where TEntity : class;
 
         /// <summary>
+        /// Gets the current object in-store from the calculated entity keys in the entity provided. Useful to determine if an update is necessary.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="pEntityInstance">An instance of the object to fetch. Used to find entity key(s).</param>
+        /// <returns>The original object in cache. Null if not found.</returns>
+        TEntity GetOriginal<TEntity>(object pEntityInstance) where TEntity : class;
+
+        /// <summary>
         /// Gets all.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
@@ -206,7 +216,7 @@ namespace MMG.Core.Persistence
         /// <returns></returns>
         IEnumerable<TEntity> Get<TEntity, TOrderBy>
             (Expression<Func<TEntity, bool>> criteria, Expression<Func<TEntity, TOrderBy>> orderBy, int pageIndex, int pageSize,
-             SortOrder sortOrder = SortOrder.Ascending) where TEntity : class;
+                SortOrder sortOrder = SortOrder.Ascending) where TEntity : class;
 
         /// <summary>
         /// Gets entities which satifies a specification.
@@ -221,7 +231,7 @@ namespace MMG.Core.Persistence
         /// <returns></returns>
         IEnumerable<TEntity> Get<TEntity, TOrderBy>
             (ISpecification<TEntity> specification, Expression<Func<TEntity, TOrderBy>> orderBy, int pageIndex, int pageSize,
-             SortOrder sortOrder = SortOrder.Ascending) where TEntity : class;
+                SortOrder sortOrder = SortOrder.Ascending) where TEntity : class;
 
         /// <summary>
         /// Counts the specified entities.

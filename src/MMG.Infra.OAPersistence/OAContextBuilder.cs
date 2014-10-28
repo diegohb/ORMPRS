@@ -1,21 +1,22 @@
 ﻿// *************************************************
 // MMG.Infra.OAPersistence.OAContextBuilder.cs
-// Last Modified: 08/30/2013 9:23 AM
+// Last Modified: 10/27/2014 8:42 PM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using MMG.Core.Persistence;
-using Telerik.OpenAccess;
-using Telerik.OpenAccess.Metadata.Fluent;
-
 namespace MMG.Core.OAPersistence
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using Persistence;
+    using Persistence.Exceptions;
+    using Telerik.OpenAccess;
+    using Telerik.OpenAccess.Metadata.Fluent;
+
     public class OAContextBuilder<TContext> : IDbContextBuilder<TContext>
-    where TContext : OADbContext, IDbContext
+        where TContext : OADbContext, IDbContext
     {
         private readonly DynamicMetadataSource _metadataSource;
         private readonly string _connectionStringName;
@@ -38,7 +39,7 @@ namespace MMG.Core.OAPersistence
 
         public TContext BuildDbContext()
         {
-            var backendConfig = new BackendConfiguration { Backend = _backendConfig };
+            var backendConfig = new BackendConfiguration {Backend = _backendConfig};
             var dbContext = (TContext) new OADbContext(_connectionStringName, backendConfig, _metadataSource);
             if (_updateDatabaseSchema)
                 updateSchema(dbContext.GetSchemaHandler());
@@ -75,8 +76,13 @@ namespace MMG.Core.OAPersistence
             }
         }
 
-        private IEnumerable<MappingConfiguration> getMappingConfigurations(IEnumerable<string> pMappingAssemblies)
+        private IEnumerable<MappingConfiguration> getMappingConfigurations(ICollection<string> pMappingAssemblies)
         {
+            if (pMappingAssemblies == null || pMappingAssemblies.Count == 0)
+            {
+                throw new PersistenceConfigurationException("You must specify at least one mapping assembly to the context builder.");
+            }
+
             var foundMappingClass = false;
             var assemblies = pMappingAssemblies.Select(Assembly.Load);
             var configurations = new List<MappingConfiguration>();
@@ -84,23 +90,23 @@ namespace MMG.Core.OAPersistence
             {
                 foreach (var type in assembly.GetTypes().Where
                     (pType => !pType.IsAbstract
-                              && pType.GetInterfaces().Contains(typeof(IMapEntityToDb))
+                              && pType.GetInterfaces().Contains(typeof (IMapEntityToDb))
                               && isMappingClass(pType.BaseType)))
                 {
-                    
                     dynamic mappingInstance = Activator.CreateInstance(type);
 
-                    var configuredConnectionName = ((IMapEntityToDb)mappingInstance).ConnectionStringName;
-                    if (!string.IsNullOrEmpty(configuredConnectionName) && !_connectionStringName.Equals(configuredConnectionName, StringComparison.InvariantCultureIgnoreCase))
+                    var configuredConnectionName = ((IMapEntityToDb) mappingInstance).ConnectionStringName;
+                    if (!string.IsNullOrEmpty(configuredConnectionName)
+                        && !_connectionStringName.Equals(configuredConnectionName, StringComparison.InvariantCultureIgnoreCase))
                         continue;
-                    
+
                     foundMappingClass = true;
                     configurations.Add(mappingInstance);
                 }
             }
 
             if (!foundMappingClass)
-                throw new ArgumentException("No mapping class found!");
+                throw new PersistenceConfigurationException("No mapping classes found in any assembly provided!");
 
             return configurations;
         }
@@ -114,10 +120,10 @@ namespace MMG.Core.OAPersistence
         /// </returns>
         private static bool isMappingClass(Type pMappingType)
         {
-            var baseType = typeof(MappingConfiguration<>);
+            var baseType = typeof (MappingConfiguration<>);
 
             if (pMappingType.IsGenericType
-                 && pMappingType.GetGenericTypeDefinition() == baseType)
+                && pMappingType.GetGenericTypeDefinition() == baseType)
                 return true;
 
             if ((pMappingType.BaseType != null) &&
@@ -130,5 +136,4 @@ namespace MMG.Core.OAPersistence
             return false;
         }
     }
-
 }

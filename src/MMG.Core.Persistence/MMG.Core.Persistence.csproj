@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbContextInitializer.cs" />
+    <Compile Include="Exceptions\PersistenceConfigurationException.cs" />
     <Compile Include="Exceptions\PersistenceException.cs" />
     <Compile Include="IDbContextBuilder.cs" />
     <Compile Include="IDbContextConfiguration.cs" />
@@ -48,8 +49,10 @@
     <Compile Include="IDbEntity.cs" />
     <Compile Include="IDbContext.cs" />
     <Compile Include="IMapEntityToDb.cs" />
+    <Compile Include="Impl\ConnectionStringProvider.cs" />
     <Compile Include="Impl\SimpleDbContextStorage.cs" />
     <Compile Include="Impl\WebDbContextStorageBase.cs" />
+    <Compile Include="IProvideConnectionString.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
