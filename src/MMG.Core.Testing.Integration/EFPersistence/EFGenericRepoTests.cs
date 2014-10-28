@@ -58,6 +58,24 @@ namespace MMG.Core.Testing.Integration.EFPersistence
             CollectionAssert.AreEquivalent(expected, actual);
         }
 
+        [Test]
+        public void InsertAndGetOriginal_ShouldReturnOriginalObject()
+        {
+            //ARRANGE
+            var newShipper = new Shipper() {Name = "Test Shipper", PhoneNumber = "123-565-8989", PriorityLevel = ShipperPriorityEnum.High};
+            _nwDB.Add(newShipper);
+            _nwDB.SaveChanges();
+            Assert.IsTrue(newShipper.Id > 0);
+
+            //ACT
+            newShipper.PriorityLevel = ShipperPriorityEnum.Low;
+            var originalShipper = _repo.GetOriginal<Shipper>(newShipper);
+            
+            //ASSERT
+            Assert.IsNotNull(originalShipper);
+            Assert.AreEqual(ShipperPriorityEnum.High, originalShipper.PriorityLevel.EnumValue);
+        }
+
         private static void initializeStorage()
         {
             DbContextInitializer.Instance().InitializeDbContextOnce(() =>
