@@ -1,6 +1,6 @@
 ﻿// *************************************************
 // MMG.Infra.EFPersistence.EFGenericRepository.cs
-// Last Modified: 10/27/2014 8:42 PM
+// Last Modified: 10/31/2014 9:35 AM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
@@ -33,21 +33,11 @@ namespace MMG.Infra.EFPersistence
         /// <summary>
         /// Initializes a new instance of the <see cref="EFGenericRepository"/> class.
         /// </summary>
-        public EFGenericRepository()
-            : this(string.Empty) {}
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EFGenericRepository"/> class.
-        /// </summary>
-        /// <param name="pConnectionStringName">Name of the connection string.</param>
-        public EFGenericRepository(string pConnectionStringName)
-        {
-            _connectionStringName = pConnectionStringName;
-        }
-
+        /// <param name="pConnectionStringProvider">The connection string provider.</param>
         public EFGenericRepository(IProvideConnectionString pConnectionStringProvider)
         {
-            _connectionStringName = pConnectionStringProvider.ConnectionString;
+            if (pConnectionStringProvider != null && !string.IsNullOrEmpty(pConnectionStringProvider.ConnectionString))
+                _connectionStringName = pConnectionStringProvider.ConnectionString;
         }
 
         /// <summary>
