@@ -1,6 +1,6 @@
 ﻿// *************************************************
 // MMG.Infra.EFPersistence.EFGenericRepository.cs
-// Last Modified: 10/25/2014 6:47 PM
+// Last Modified: 10/27/2014 8:42 PM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
@@ -251,6 +251,20 @@ namespace MMG.Infra.EFPersistence
             {
                 Delete<TEntity>(record);
             }
+        }
+
+        public TEntity GetOriginal<TEntity>(object pEntityInstance) where TEntity : class
+        {
+            var fqen = getEntityName<TEntity>();
+
+            object existingItem;
+            var key = ((IObjectContextAdapter) DbContext).ObjectContext.CreateEntityKey(fqen, pEntityInstance);
+            if (((IObjectContextAdapter) DbContext).ObjectContext.TryGetObjectByKey(key, out existingItem))
+            {
+                return (TEntity) existingItem;
+            }
+
+            return null;
         }
 
         public IEnumerable<TEntity> GetAll<TEntity>() where TEntity : class

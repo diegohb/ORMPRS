@@ -1,17 +1,18 @@
-﻿using System.Collections;
-using System.Linq;
-using MMG.Core.Persistence;
-using MMG.Core.Persistence.Exceptions;
-using MMG.Core.Persistence.Impl;
-using MMG.Core.Testing.Integration.Northwind;
-using MMG.Infra.EFPersistence;
-using NUnit.Framework;
-using NUnit.Framework.Constraints;
+﻿// *************************************************
+// MMG.Core.Testing.Integration.EFGenericRepoTests.cs
+// Last Modified: 10/27/2014 8:43 PM
+// Modified By: Bustamante, Diego (bustamd1)
+// *************************************************
 
 namespace MMG.Core.Testing.Integration.EFPersistence
 {
-    using System.Reflection;
-    using Common.Extensions;
+    using System.Linq;
+    using Infra.EFPersistence;
+    using Northwind;
+    using NUnit.Framework;
+    using Persistence;
+    using Persistence.Exceptions;
+    using Persistence.Impl;
 
     [TestFixture]
     public class EFGenericRepoTests
@@ -40,7 +41,7 @@ namespace MMG.Core.Testing.Integration.EFPersistence
             const string connectionString = "test_name";
             var cnProvider = new ConnectionStringProvider(connectionString);
             Assert.IsNotNull(cnProvider);
-            Assert.AreEqual(connectionString,cnProvider.ConnectionString);
+            Assert.AreEqual(connectionString, cnProvider.ConnectionString);
             var testRepo = new EFGenericRepository(cnProvider);
             Assert.IsNotNull(testRepo);
         }
@@ -72,15 +73,35 @@ namespace MMG.Core.Testing.Integration.EFPersistence
             CollectionAssert.AreEquivalent(expected, actual);
         }
 
+        [Test]
+        public void InsertAndGetOriginal_ShouldReturnOriginalObject()
+        {
+            //ARRANGE
+            var newShipper = new Shipper() {Name = "Test Shipper", PhoneNumber = "123-565-8989", PriorityLevel = ShipperPriorityEnum.High};
+            _nwDB.Add(newShipper);
+            _nwDB.SaveChanges();
+            Assert.IsTrue(newShipper.Id > 0);
+
+            //ACT
+            newShipper.PriorityLevel = ShipperPriorityEnum.Low;
+            var originalShipper = _repo.GetOriginal<Shipper>(newShipper);
+
+            //ASSERT
+            Assert.IsNotNull(originalShipper);
+            Assert.AreEqual(ShipperPriorityEnum.High, originalShipper.PriorityLevel.EnumValue);
+        }
+
         private static void initializeStorage()
         {
-            DbContextInitializer.Instance().InitializeDbContextOnce(() =>
-            {
-                Assert.Throws<PersistenceException>(() => EFContextManager.Instance.CurrentFor(Utility.NorthwindDBConnectionName));
-                var storage = new SimpleDbContextStorage();
-                EFContextManager.Instance.InitStorage(storage);
-                EFContextManager.Instance.AddContextBuilder(Utility.NorthwindDBConnectionName, new EFContextConfiguration(new[] { "MMG.Core.Testing.Integration" }));
-            });
+            DbContextInitializer.Instance().InitializeDbContextOnce
+                (() =>
+                {
+                    Assert.Throws<PersistenceException>(() => EFContextManager.Instance.CurrentFor(Utility.NorthwindDBConnectionName));
+                    var storage = new SimpleDbContextStorage();
+                    EFContextManager.Instance.InitStorage(storage);
+                    EFContextManager.Instance.AddContextBuilder
+                        (Utility.NorthwindDBConnectionName, new EFContextConfiguration(new[] {"MMG.Core.Testing.Integration"}));
+                });
 
             Assert.IsNotNull(EFContextManager.Instance.Storage);
             Assert.IsInstanceOf<IDbContextStorage>(EFContextManager.Instance.Storage);
@@ -94,8 +115,7 @@ namespace MMG.Core.Testing.Integration.EFPersistence
 
             _nwDB = new NorthwindDB();
             _nwDB.Configuration.ProxyCreationEnabled = false;
-            _repo = new EFGenericRepository((EFDbContext)dbContext);
+            _repo = new EFGenericRepository((EFDbContext) dbContext);
         }
-
     }
 }

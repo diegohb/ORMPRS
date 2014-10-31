@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbContextInitializer.cs" />
+    <Compile Include="Exceptions\PersistenceConfigurationException.cs" />
     <Compile Include="Exceptions\PersistenceException.cs" />
     <Compile Include="IDbContextBuilder.cs" />
     <Compile Include="IDbContextConfiguration.cs" />
