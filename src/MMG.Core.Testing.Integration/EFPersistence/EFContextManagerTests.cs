@@ -76,8 +76,8 @@ namespace MMG.Core.Testing.Integration.EFPersistence
 
         private static void confirmContextsAreSeparate()
         {
-            var repo1 = new EFGenericRepository(Utility.NorthwindDBConnectionName);
-            var repo2 = new EFGenericRepository(Utility.NorthwindAltDBConnectionName);
+            var repo1 = new EFGenericRepository(new ConnectionStringProvider(Utility.NorthwindDBConnectionName));
+            var repo2 = new EFGenericRepository(new ConnectionStringProvider(Utility.NorthwindAltDBConnectionName));
 
             var bolidCustRepo1 = repo1.GetByKey<Customer>("BOLID");
             var bolidCustRepo1SameContext = repo1.GetByKey<Customer>("BOLID");

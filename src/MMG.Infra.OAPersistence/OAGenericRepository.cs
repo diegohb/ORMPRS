@@ -1,6 +1,6 @@
 ﻿// *************************************************
 // MMG.Infra.OAPersistence.OAGenericRepository.cs
-// Last Modified: 10/27/2014 8:42 PM
+// Last Modified: 10/31/2014 9:35 AM
 // Modified By: Bustamante, Diego (bustamd1)
 // *************************************************
 
@@ -25,18 +25,13 @@ namespace MMG.Core.OAPersistence
         private IUnitOfWork _unitOfWork;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Repository&lt;TEntity&gt;"/> class.
+        /// Initializes a new instance of the <see cref="OAGenericRepository"/> class.
         /// </summary>
-        public OAGenericRepository()
-            : this(string.Empty) {}
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GenericRepository&lt;TEntity&gt;"/> class.
-        /// </summary>
-        /// <param name="connectionStringName">Name of the connection string.</param>
-        public OAGenericRepository(string connectionStringName)
+        /// <param name="pConnectionStringProvider">The connection string provider.</param>
+        public OAGenericRepository(IProvideConnectionString pConnectionStringProvider)
         {
-            _connectionStringName = connectionStringName;
+            if (pConnectionStringProvider != null && !string.IsNullOrEmpty(pConnectionStringProvider.ConnectionString))
+                _connectionStringName = pConnectionStringProvider.ConnectionString;
         }
 
         /// <summary>

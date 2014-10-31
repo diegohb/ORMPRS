@@ -75,8 +75,8 @@ namespace MMG.Core.Testing.Integration.OAPersistence
 
         private static void confirmContextsAreSeparate()
         {
-            var repo1 = new OAGenericRepository(Utility.NorthwindDBConnectionName);
-            var repo2 = new OAGenericRepository(Utility.NorthwindAltDBConnectionName);
+            var repo1 = new OAGenericRepository(new ConnectionStringProvider(Utility.NorthwindDBConnectionName));
+            var repo2 = new OAGenericRepository(new ConnectionStringProvider(Utility.NorthwindAltDBConnectionName));
 
             var bolidCustRepo1 = repo1.GetByKey<Customer>("BOLID");
             var bolidCustRepo1SameContext = repo1.GetByKey<Customer>("BOLID");
